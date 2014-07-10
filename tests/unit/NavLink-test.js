@@ -73,6 +73,7 @@ describe('dispatchNavAction()', function () {
         ReactTestUtils.Simulate.click(link.getDOMNode());
         window.setTimeout(function () {
             expect(testResult.dispatch.action).to.equal('NAVIGATE');
+            expect(testResult.dispatch.payload.type).to.equal('click');
             expect(testResult.dispatch.payload.path).to.equal('/foo');
             expect(testResult.dispatch.payload.params).to.eql({a: 1, b: true});
             done();
