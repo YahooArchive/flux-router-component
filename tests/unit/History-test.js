@@ -180,3 +180,26 @@ describe('pushState', function () {
     });
 });
 
+describe('replaceState', function () {
+    it ('has pushState', function () {
+        var history = new History(windowMock.HTML5);
+        history.replaceState({foo: 'bar'}, 't', '/url');
+        expect(testResult.replaceState.state).to.eql({foo: 'bar'});
+        expect(testResult.replaceState.title).to.equal('t');
+        expect(testResult.replaceState.url).to.equal('/url');
+    });
+    it ('no pushState', function () {
+        var win = _.extend(windowMock.OLD, {
+            location: {
+                href: 'http://mydomain.com/path',
+                replace: function(url) {
+                    testResult.locationReplace = {url: url};
+                }
+
+            }
+        });
+        var history = new History(win);
+        history.replaceState({foo: 'bar'}, 't', '/url');
+        expect(testResult.locationReplace.url).to.equal('http://mydomain.com/path#/url');
+    });
+});
