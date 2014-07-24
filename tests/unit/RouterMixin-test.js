@@ -93,10 +93,32 @@ describe('componentDidUpdate()', function () {
             newRoute = {path: '/bar'};
         var origPushState = window.history.pushState;
         window.history.pushState = pushStateMock;
-        routerMixin.state = {route: newRoute};
+        routerMixin.state = {route: newRoute, navigateType: 'click'};
         routerMixin.componentDidMount();
-        routerMixin.componentDidUpdate({},  {route: oldRoute, navigateType: 'click'});
+        routerMixin.componentDidUpdate({},  {route: oldRoute});
         expect(testResult.pushState).to.eql({state: null, title: null, url: '/bar'});
+        window.history.pushState = origPushState;
+    });
+    it ('do not pushState, navigate.type=popstate', function () {
+        var oldRoute = {path: '/foo'},
+            newRoute = {path: '/bar'};
+        var origPushState = window.history.pushState;
+        window.history.pushState = pushStateMock;
+        routerMixin.state = {route: newRoute, navigate: {type: 'popstate'}};
+        routerMixin.componentDidMount();
+        routerMixin.componentDidUpdate({},  {route: oldRoute});
+        expect(testResult.pushState).to.equal(undefined);
+        window.history.pushState = origPushState;
+    });
+    it ('update with different route, navigate.type=click', function () {
+        var oldRoute = {path: '/foo'},
+            newRoute = {path: '/bar'};
+        var origPushState = window.history.pushState;
+        window.history.pushState = pushStateMock;
+        routerMixin.state = {route: newRoute, navigate: {type: 'click', params: {foo: 'bar'}}};
+        routerMixin.componentDidMount();
+        routerMixin.componentDidUpdate({},  {route: oldRoute});
+        expect(testResult.pushState).to.eql({state: {foo: 'bar'}, title: null, url: '/bar'});
         window.history.pushState = origPushState;
     });
 });
