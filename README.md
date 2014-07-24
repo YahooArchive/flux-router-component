@@ -61,6 +61,11 @@ var Application = React.createClass({
 });
 ```
 
+## Browser Support and Polyfills
+`addEventListener` and `removeEventListener` polyfills are provided by:
+
+* Compatibility code example on [Mozilla Developer Network](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget.addEventListener)
+* A few DOM polyfill libaries listed on [Modernizer Polyfill wiki page](https://github.com/Modernizr/Modernizr/wiki/HTML5-Cross-Browser-Polyfills#dom).
 
 ## License
 This software is free to use under the Yahoo! Inc. BSD license.
