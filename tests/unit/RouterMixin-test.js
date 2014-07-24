@@ -72,6 +72,7 @@ describe('componentDidUpdate()', function () {
         var origPushState = window.history.pushState;
         window.history.pushState = pushStateMock;
         routerMixin.state = {route: newRoute};
+        routerMixin.componentDidMount();
         routerMixin.componentDidUpdate({}, {route: prevRoute});
         expect(testResult.pushState).to.equal(undefined);
         window.history.pushState = origPushState;
@@ -82,6 +83,7 @@ describe('componentDidUpdate()', function () {
         var origPushState = window.history.pushState;
         window.history.pushState = pushStateMock;
         routerMixin.state = {route: newRoute, navigateType: 'popstate'};
+        routerMixin.componentDidMount();
         routerMixin.componentDidUpdate({},  {route: oldRoute});
         expect(testResult.pushState).to.equal(undefined);
         window.history.pushState = origPushState;
@@ -92,6 +94,7 @@ describe('componentDidUpdate()', function () {
         var origPushState = window.history.pushState;
         window.history.pushState = pushStateMock;
         routerMixin.state = {route: newRoute};
+        routerMixin.componentDidMount();
         routerMixin.componentDidUpdate({},  {route: oldRoute, navigateType: 'click'});
         expect(testResult.pushState).to.eql({state: null, title: null, url: '/bar'});
         window.history.pushState = origPushState;
