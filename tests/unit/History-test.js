@@ -57,16 +57,7 @@ windowMock = {
 };
 
 beforeEach(function () {
-    // global.window = jsdom.jsdom().createWindow('<html><body></body></html>');
-    // global.document = global.window.document;
-    // global.navigator = global.window.navigator;
     testResult = {};
-});
-
-afterEach(function () {
-    // delete global.window;
-    // delete global.document;
-    // delete global.navigator;
 });
 
 describe('constructor', function () {
@@ -81,6 +72,19 @@ describe('constructor', function () {
         expect(history.win).to.equal(windowMock.OLD);
         expect(history._hasPushState).to.equal(false);
         expect(history._popstateEvt).to.equal('hashchange');
+    });
+});
+
+describe('hasPushState', function () {
+    it ('has pushState', function () {
+        var history = new History(windowMock.HTML5);
+        expect(history.win).to.equal(windowMock.HTML5);
+        expect(history.hasPushState()).to.equal(true);
+    });
+    it ('no pushState', function () {
+        var history = new History(windowMock.OLD);
+        expect(history.win).to.equal(windowMock.OLD);
+        expect(history.hasPushState()).to.equal(false);
     });
 });
 
@@ -111,6 +115,31 @@ describe('off', function () {
         var listener = function () {};
         history.off(listener);
         expect(testResult.removeEventListener).to.eql({evt: 'hashchange', listener: listener});
+    });
+});
+
+describe('getHash', function () {
+    it ('empty hash', function () {
+        var win = _.extend(windowMock.HTML5, {
+            location: {
+                pathname: '/path/to/page',
+                hash: '#'
+            }
+        });
+        var history = new History(win);
+        var hash = history.getHash();
+        expect(hash).to.equal('');
+    });
+    it ('non-empty hash', function () {
+        var win = _.extend(windowMock.HTML5, {
+            location: {
+                pathname: '/path/to/page',
+                hash: '#/path/to/abc'
+            }
+        });
+        var history = new History(win);
+        var hash = history.getHash();
+        expect(hash).to.equal('/path/to/abc');
     });
 });
 
