@@ -21,8 +21,7 @@
   ],
   "dependencies": {
     "debug": "^1.0.0",
-    "react": "^0.10.0",
-    "routr": "^0.0.1"
+    "react": "^0.10.0"
   },
   "devDependencies": {
     "chai": "^1.9.1",
