@@ -12,7 +12,7 @@ var Nav = React.createClass({
     render: function () {
         var pages,
             links,
-            dispatcher = this.props.dispatcher;  // this is the Flux dispatcher object
+            context = this.props.context;  // this should have a router instance and an executeAction function
         pages = [
             {
                 name: 'home',
@@ -28,7 +28,7 @@ var Nav = React.createClass({
         links = pages.map(function (page) {
             return (
                 <li className="navItem">
-                    <NavLink href={page.url} dispatcher={dispatcher}>
+                    <NavLink href={page.url} context={context}>
                         {page.text}
                     </NavLink>
                 </li>
@@ -45,10 +45,10 @@ var Nav = React.createClass({
 ```
 
 ## RouterMixin
-`RouterMixin` is a React mixin to be used by appication's top level React component to:
+`RouterMixin` is a React mixin to be used by application's top level React component to:
 
 * manage browser history when route changes, and
-* dispatch `NAVIGATE` action via flux dispatcher on window `popstate` events
+* execute navigate action and then dispatch `CHANGE_ROUTE` event via flux dispatcher on window `popstate` events
 
 
 ### Example Usage

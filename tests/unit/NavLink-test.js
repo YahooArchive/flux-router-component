@@ -8,18 +8,9 @@ var React,
     ReactTestUtils,
     jsdom = require('jsdom'),
     expect = require('chai').expect,
-    dispatcherMock,
+    contextMock,
     routerMock,
     testResult;
-
-dispatcherMock = {
-    dispatch: function (action, payload) {
-        testResult.dispatch = {
-            action: action,
-            payload: payload
-        };
-    }
-};
 
 routerMock = {
     makePath: function (name, params) {
@@ -33,50 +24,64 @@ routerMock = {
     }
 };
 
-beforeEach(function () {
-    global.window = jsdom.jsdom().createWindow('<html><body></body></html>');
-    global.document = global.window.document;
-    global.navigator = global.window.navigator;
-    React = require('react/addons');
-    ReactTestUtils = React.addons.TestUtils;
-    NavLink = require('../../lib/NavLink');
-    testResult = {};
-});
+contextMock = {
+    executeAction: function (action, payload) {
+        testResult.dispatch = {
+            action: 'NAVIGATE',
+            payload: payload
+        };
+    },
+    makePath: routerMock.makePath.bind(routerMock)
+};
 
-afterEach(function () {
-    delete global.window;
-    delete global.document;
-    delete global.navigator;
-});
+describe('NavLink', function () {
 
-describe('render()', function () {
-    it ('href defined', function () {
-        var link = ReactTestUtils.renderIntoDocument(NavLink( {href:"/foo"}, React.DOM.span(null, "bar")));
-        expect(link.props.href).to.equal('/foo');
-        expect(link.getDOMNode().textContent).to.equal('bar');
+    beforeEach(function () {
+        global.window = jsdom.jsdom().createWindow('<html><body></body></html>');
+        global.document = global.window.document;
+        global.navigator = global.window.navigator;
+        React = require('react/addons');
+        ReactTestUtils = React.addons.TestUtils;
+        NavLink = require('../../lib/NavLink');
+        testResult = {};
     });
-    it ('both href and name defined', function () {
-        var link = ReactTestUtils.renderIntoDocument(NavLink( {name:"fooo", href:"/foo"}, React.DOM.span(null, "bar")));
-        expect(link.props.href).to.equal('/foo');
-    });
-    it ('only name defined', function () {
-        var navParams = {a: 1, b: 2},
-            link = ReactTestUtils.renderIntoDocument(NavLink( {name:"foo", navParams:navParams, router:routerMock}, React.DOM.span(null, "bar")));
-        expect(link.props.href).to.equal('/foo/a/1/b/2');
-    });
-});
 
-describe('dispatchNavAction()', function () {
-    it ('dispatcher.dispatch called', function (done) {
-        var navParams = {a: 1, b: true},
-            link = ReactTestUtils.renderIntoDocument(NavLink( {href:"/foo", dispatcher:dispatcherMock, navParams:navParams}, React.DOM.span(null, "bar")));
-        ReactTestUtils.Simulate.click(link.getDOMNode());
-        window.setTimeout(function () {
-            expect(testResult.dispatch.action).to.equal('NAVIGATE');
-            expect(testResult.dispatch.payload.type).to.equal('click');
-            expect(testResult.dispatch.payload.path).to.equal('/foo');
-            expect(testResult.dispatch.payload.params).to.eql({a: 1, b: true});
-            done();
-        }, 200);
+    afterEach(function () {
+        delete global.window;
+        delete global.document;
+        delete global.navigator;
     });
+
+    describe('render()', function () {
+        it ('href defined', function () {
+            var link = ReactTestUtils.renderIntoDocument(NavLink( {href:"/foo"}, React.DOM.span(null, "bar")));
+            expect(link.props.href).to.equal('/foo');
+            expect(link.getDOMNode().textContent).to.equal('bar');
+        });
+        it ('both href and name defined', function () {
+            var link = ReactTestUtils.renderIntoDocument(NavLink( {name:"fooo", href:"/foo"}, React.DOM.span(null, "bar")));
+            expect(link.props.href).to.equal('/foo');
+        });
+        it ('only name defined', function () {
+            var navParams = {a: 1, b: 2},
+                link = ReactTestUtils.renderIntoDocument(NavLink( {name:"foo", navParams:navParams, context:contextMock}, React.DOM.span(null, "bar")));
+            expect(link.props.href).to.equal('/foo/a/1/b/2');
+        });
+    });
+
+    describe('dispatchNavAction()', function () {
+        it ('context.executeAction called', function (done) {
+            var navParams = {a: 1, b: true},
+                link = ReactTestUtils.renderIntoDocument(NavLink( {href:"/foo", context:contextMock, navParams:navParams}, React.DOM.span(null, "bar")));
+            ReactTestUtils.Simulate.click(link.getDOMNode());
+            window.setTimeout(function () {
+                expect(testResult.dispatch.action).to.equal('NAVIGATE');
+                expect(testResult.dispatch.payload.type).to.equal('click');
+                expect(testResult.dispatch.payload.path).to.equal('/foo');
+                expect(testResult.dispatch.payload.params).to.eql({a: 1, b: true});
+                done();
+            }, 10);
+        });
+    });
+
 });

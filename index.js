@@ -6,5 +6,6 @@
 
 module.exports = {
     NavLink: require('./lib/NavLink'),
-    RouterMixin: require('./lib/RouterMixin')
+    RouterMixin: require('./lib/RouterMixin'),
+    navigateAction: require('./actions/navigate')
 };
