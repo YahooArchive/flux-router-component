@@ -48,7 +48,7 @@ var Nav = React.createClass({
 `RouterMixin` is a React mixin to be used by application's top level React component to:
 
 * manage browser history when route changes, and
-* execute navigate action and then dispatch `NAVIGATE` event via flux dispatcher on window `popstate` events
+* execute navigate action and then dispatch `CHANGE_ROUTE` event via flux dispatcher on window `popstate` events
 
 
 ### Example Usage
