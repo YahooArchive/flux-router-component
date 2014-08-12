@@ -30,7 +30,7 @@ pushStateMock = function (state, title, url) {
 describe ('RouterMixin', function () {
 
     beforeEach(function () {
-        routerMixin = require('../../lib/RouterMixin');
+        routerMixin = require('../../../lib/RouterMixin');
         routerMixin.props = {context: contextMock};
         global.window = jsdom.jsdom().createWindow('<html><body></body></html>');
         global.document = global.window.document;

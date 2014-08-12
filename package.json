@@ -9,8 +9,8 @@
   },
   "scripts": {
     "cover": "node node_modules/istanbul/lib/cli.js cover --dir artifacts -- ./node_modules/mocha/bin/_mocha tests/unit/ --recursive --reporter spec",
-    "lint": "./node_modules/.bin/jshint lib tests",
-    "test": "./node_modules/.bin/mocha tests/unit/ --recursive --reporter spec"
+    "lint": "jshint lib tests",
+    "test": "mocha tests/unit/ --recursive --reporter spec"
   },
   "author": "Lingyan Zhu <lingyan@yahoo-inc.com",
   "licenses": [

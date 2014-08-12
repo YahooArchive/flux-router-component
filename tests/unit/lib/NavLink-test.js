@@ -42,7 +42,7 @@ describe('NavLink', function () {
         global.navigator = global.window.navigator;
         React = require('react/addons');
         ReactTestUtils = React.addons.TestUtils;
-        NavLink = require('../../lib/NavLink');
+        NavLink = require('../../../lib/NavLink');
         testResult = {};
     });
 

@@ -6,10 +6,9 @@ module.exports = function (payload, done) {
         return;
     }
     debug('executing', payload);
-    var route = this.router.getRoute(payload.path, {navigate: payload}),
-        newPageName = (route && route.config.page) || null;
+    var route = this.router.getRoute(payload.path, {navigate: payload});
 
-    if (!newPageName) {
+    if (!route) {
         var err = new Error('Url does not exist');
         err.status = 404;
         done(err);
@@ -17,5 +16,13 @@ module.exports = function (payload, done) {
     }
     debug('dispatching CHANGE_ROUTE', route);
     this.dispatch('CHANGE_ROUTE', route);
+    var routeHandler = route.config && route.config.handler;
+    if (!routeHandler) {
+        done();
+        return;
+    }
+
+    // Execute route handler
+    this.executeAction(routeHandler, route, done);
     done();
 };
