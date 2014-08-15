@@ -49,7 +49,7 @@ describe('navigateAction', function () {
 
     it ('should not call anything if the router is not set', function () {
         mockContext.router = undefined;
-        navigateAction.call(mockContext, {
+        navigateAction(mockContext, {
             path: '/'
         }, function () {
             expect(mockContext.routerCalls.length).to.equal(0);
@@ -59,7 +59,7 @@ describe('navigateAction', function () {
     });
 
     it ('it should dispatch on route match', function () {
-        navigateAction.call(mockContext, {
+        navigateAction(mockContext, {
             path: '/'
         }, function (err) {
             expect(err).to.equal(undefined);
@@ -71,7 +71,7 @@ describe('navigateAction', function () {
     });
 
     it ('it should not call execute action if there is no handler', function () {
-        navigateAction.call(mockContext, {
+        navigateAction(mockContext, {
             path: '/'
         }, function () {
             expect(mockContext.executeActionCalls.length).to.equal(0);
@@ -79,7 +79,7 @@ describe('navigateAction', function () {
     });
 
     it ('it should call execute action if there is a handler', function () {
-        navigateAction.call(mockContext, {
+        navigateAction(mockContext, {
             path: '/handler'
         }, function (err) {
             expect(err).to.equal(undefined);
@@ -92,7 +92,7 @@ describe('navigateAction', function () {
     });
 
     it ('it should call back with a 404 error if route not found', function () {
-        navigateAction.call(mockContext, {
+        navigateAction(mockContext, {
             path: '/404'
         }, function (err) {
             expect(mockContext.routerCalls.length).to.equal(1);

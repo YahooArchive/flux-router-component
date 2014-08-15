@@ -1,12 +1,12 @@
 var debug = require('debug')('navigateAction');
 
-module.exports = function (payload, done) {
-    if (!this.router || !this.router.getRoute) {
+module.exports = function (context, payload, done) {
+    if (!context.router || !context.router.getRoute) {
         debug('no router available for navigate handling');
         return;
     }
     debug('executing', payload);
-    var route = this.router.getRoute(payload.path, {navigate: payload});
+    var route = context.router.getRoute(payload.path, {navigate: payload});
 
     if (!route) {
         var err = new Error('Url does not exist');
@@ -15,7 +15,7 @@ module.exports = function (payload, done) {
         return;
     }
     debug('dispatching CHANGE_ROUTE', route);
-    this.dispatch('CHANGE_ROUTE', route);
+    context.dispatch('CHANGE_ROUTE', route);
     var routeHandler = route.config && route.config.handler;
     if (!routeHandler) {
         done();
@@ -23,6 +23,6 @@ module.exports = function (payload, done) {
     }
 
     // Execute route handler
-    this.executeAction(routeHandler, route, done);
+    context.executeAction(routeHandler, route, done);
     done();
 };
