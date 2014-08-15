@@ -8,28 +8,28 @@ var expect = require('chai').expect,
 
 describe('navigateAction', function () {
     var mockContext,
-        handlerCalls,
+        actionCalls,
         homeRoute,
-        handlerRoute,
+        actionRoute,
         failedRoute;
 
     beforeEach(function () {
         homeRoute = {};
-        handlerRoute = {
+        actionRoute = {
             config: {
-                handler: function () {
-                    mockContext.handlerCalls.push(arguments);
+                action: function () {
+                    mockContext.actionCalls.push(arguments);
                 }
             }
         };
         failedRoute = {
             config: {
-                handler: function () {
-                    mockContext.handlerCalls.push(arguments);
+                action: function () {
+                    mockContext.actionCalls.push(arguments);
                 }
             }
         };
-        handlerCalls = [];
+        actionCalls = [];
         mockContext = {
             routerCalls: [],
             router: {
@@ -37,8 +37,8 @@ describe('navigateAction', function () {
                     mockContext.routerCalls.push(arguments);
                     if ('/' === path) {
                         return homeRoute;
-                    } else if ('/handler' === path) {
-                        return handlerRoute;
+                    } else if ('/action' === path) {
+                        return actionRoute;
                     } else if ('/fail' === path) {
                         return failedRoute;
                     }
@@ -46,9 +46,9 @@ describe('navigateAction', function () {
                 }
             },
             executeActionCalls: [],
-            executeAction: function(handler, route, done) {
+            executeAction: function(action, route, done) {
                 mockContext.executeActionCalls.push(arguments);
-                if (failedRoute.config.handler === handler) {
+                if (failedRoute.config.action === action) {
                     done(new Error('test'));
                     return;
                 }
@@ -78,13 +78,15 @@ describe('navigateAction', function () {
         }, function (err) {
             expect(err).to.equal(undefined);
             expect(mockContext.routerCalls.length).to.equal(1);
-            expect(mockContext.dispatchCalls.length).to.equal(1);
+            expect(mockContext.dispatchCalls.length).to.equal(2);
             expect(mockContext.dispatchCalls[0][0]).to.equal('CHANGE_ROUTE_START');
             expect(mockContext.dispatchCalls[0][1]).to.equal(homeRoute);
+            expect(mockContext.dispatchCalls[1][0]).to.equal('CHANGE_ROUTE_SUCCESS');
+            expect(mockContext.dispatchCalls[1][1]).to.equal(homeRoute);
         });
     });
 
-    it ('it should not call execute action if there is no handler', function () {
+    it ('it should not call execute action if there is no action', function () {
         navigateAction(mockContext, {
             path: '/'
         }, function () {
@@ -92,22 +94,22 @@ describe('navigateAction', function () {
         });
     });
 
-    it ('it should call execute action if there is a handler', function () {
+    it ('it should call execute action if there is a action', function () {
         navigateAction(mockContext, {
-            path: '/handler'
+            path: '/action'
         }, function (err) {
             expect(err).to.equal(undefined);
             expect(mockContext.dispatchCalls.length).to.equal(2);
             expect(mockContext.dispatchCalls[1][0]).to.equal('CHANGE_ROUTE_SUCCESS');
-            expect(mockContext.dispatchCalls[1][1]).to.equal(handlerRoute);
+            expect(mockContext.dispatchCalls[1][1]).to.equal(actionRoute);
             expect(mockContext.executeActionCalls.length).to.equal(1);
-            expect(mockContext.executeActionCalls[0][0]).to.equal(handlerRoute.config.handler);
-            expect(mockContext.executeActionCalls[0][1]).to.equal(handlerRoute);
+            expect(mockContext.executeActionCalls[0][0]).to.equal(actionRoute.config.action);
+            expect(mockContext.executeActionCalls[0][1]).to.equal(actionRoute);
             expect(mockContext.executeActionCalls[0][2]).to.be.a('function');
         });
     });
 
-    it ('it should dispatch failure if handler failed', function () {
+    it ('it should dispatch failure if action failed', function () {
         navigateAction(mockContext, {
             path: '/fail'
         }, function (err) {

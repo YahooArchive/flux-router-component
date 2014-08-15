@@ -16,14 +16,15 @@ module.exports = function (context, payload, done) {
     }
     debug('dispatching CHANGE_ROUTE', route);
     context.dispatch('CHANGE_ROUTE_START', route);
-    var routeHandler = route.config && route.config.handler;
-    if (!routeHandler) {
+    var action = route.config && route.config.action;
+    if (!action) {
+        context.dispatch('CHANGE_ROUTE_SUCCESS', route);
         done();
         return;
     }
 
     // Execute route handler
-    context.executeAction(routeHandler, route, function (err) {
+    context.executeAction(action, route, function (err) {
         if (err) {
             context.dispatch('CHANGE_ROUTE_FAILURE', route);
         } else {
