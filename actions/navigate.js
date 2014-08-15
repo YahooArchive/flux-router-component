@@ -15,7 +15,7 @@ module.exports = function (context, payload, done) {
         return;
     }
     debug('dispatching CHANGE_ROUTE', route);
-    context.dispatch('CHANGE_ROUTE', route);
+    context.dispatch('CHANGE_ROUTE_START', route);
     var routeHandler = route.config && route.config.handler;
     if (!routeHandler) {
         done();
@@ -23,6 +23,12 @@ module.exports = function (context, payload, done) {
     }
 
     // Execute route handler
-    context.executeAction(routeHandler, route, done);
-    done();
+    context.executeAction(routeHandler, route, function (err) {
+        if (err) {
+            context.dispatch('CHANGE_ROUTE_FAILURE', route);
+        } else {
+            context.dispatch('CHANGE_ROUTE_SUCCESS', route);
+        }
+        done(err);
+    });
 };
