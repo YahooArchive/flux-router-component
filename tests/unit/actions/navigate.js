@@ -10,11 +10,19 @@ describe('navigateAction', function () {
     var mockContext,
         handlerCalls,
         homeRoute,
-        handlerRoute;
+        handlerRoute,
+        failedRoute;
 
     beforeEach(function () {
         homeRoute = {};
         handlerRoute = {
+            config: {
+                handler: function () {
+                    mockContext.handlerCalls.push(arguments);
+                }
+            }
+        };
+        failedRoute = {
             config: {
                 handler: function () {
                     mockContext.handlerCalls.push(arguments);
@@ -31,6 +39,8 @@ describe('navigateAction', function () {
                         return homeRoute;
                     } else if ('/handler' === path) {
                         return handlerRoute;
+                    } else if ('/fail' === path) {
+                        return failedRoute;
                     }
                     return null;
                 }
@@ -38,6 +48,10 @@ describe('navigateAction', function () {
             executeActionCalls: [],
             executeAction: function(handler, route, done) {
                 mockContext.executeActionCalls.push(arguments);
+                if (failedRoute.config.handler === handler) {
+                    done(new Error('test'));
+                    return;
+                }
                 done();
             },
             dispatchCalls: [],
@@ -65,7 +79,7 @@ describe('navigateAction', function () {
             expect(err).to.equal(undefined);
             expect(mockContext.routerCalls.length).to.equal(1);
             expect(mockContext.dispatchCalls.length).to.equal(1);
-            expect(mockContext.dispatchCalls[0][0]).to.equal('CHANGE_ROUTE');
+            expect(mockContext.dispatchCalls[0][0]).to.equal('CHANGE_ROUTE_START');
             expect(mockContext.dispatchCalls[0][1]).to.equal(homeRoute);
         });
     });
@@ -83,11 +97,24 @@ describe('navigateAction', function () {
             path: '/handler'
         }, function (err) {
             expect(err).to.equal(undefined);
-            expect(mockContext.dispatchCalls.length).to.equal(1);
+            expect(mockContext.dispatchCalls.length).to.equal(2);
+            expect(mockContext.dispatchCalls[1][0]).to.equal('CHANGE_ROUTE_SUCCESS');
+            expect(mockContext.dispatchCalls[1][1]).to.equal(handlerRoute);
             expect(mockContext.executeActionCalls.length).to.equal(1);
             expect(mockContext.executeActionCalls[0][0]).to.equal(handlerRoute.config.handler);
             expect(mockContext.executeActionCalls[0][1]).to.equal(handlerRoute);
             expect(mockContext.executeActionCalls[0][2]).to.be.a('function');
+        });
+    });
+
+    it ('it should dispatch failure if handler failed', function () {
+        navigateAction(mockContext, {
+            path: '/fail'
+        }, function (err) {
+            expect(err).to.be.an('object');
+            expect(mockContext.dispatchCalls.length).to.equal(2);
+            expect(mockContext.dispatchCalls[1][0]).to.equal('CHANGE_ROUTE_FAILURE');
+            expect(mockContext.dispatchCalls[1][1]).to.equal(failedRoute);
         });
     });
 
