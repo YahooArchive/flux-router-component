@@ -17,13 +17,19 @@ module.exports = function (context, payload, done) {
     debug('dispatching CHANGE_ROUTE', route);
     context.dispatch('CHANGE_ROUTE_START', route);
     var action = route.config && route.config.action;
-    if (!action) {
+
+    if ('string' === typeof action && context.getAction) {
+        action = context.getAction(action);
+    }
+
+    if (!action || 'function' !== typeof action) {
+        debug('route has no action, dispatching without calling action');
         context.dispatch('CHANGE_ROUTE_SUCCESS', route);
         done();
         return;
     }
 
-    // Execute route handler
+    debug('executing route action');
     context.executeAction(action, route, function (err) {
         if (err) {
             context.dispatch('CHANGE_ROUTE_FAILURE', route);
