@@ -11,22 +11,26 @@ describe('navigateAction', function () {
         actionCalls,
         homeRoute,
         actionRoute,
-        failedRoute;
+        failedRoute,
+        stringActionRoute,
+        fooAction;
 
     beforeEach(function () {
         homeRoute = {};
+        fooAction = function () {};
         actionRoute = {
             config: {
-                action: function () {
-                    mockContext.actionCalls.push(arguments);
-                }
+                action: function () {}
             }
         };
         failedRoute = {
             config: {
-                action: function () {
-                    mockContext.actionCalls.push(arguments);
-                }
+                action: function () {}
+            }
+        };
+        stringActionRoute = {
+            config: {
+                action: 'foo'
             }
         };
         actionCalls = [];
@@ -41,11 +45,16 @@ describe('navigateAction', function () {
                         return actionRoute;
                     } else if ('/fail' === path) {
                         return failedRoute;
+                    } else if ('/string' === path) {
+                        return stringActionRoute;
                     }
                     return null;
                 }
             },
             executeActionCalls: [],
+            getAction: function () {
+                return fooAction;
+            },
             executeAction: function(action, route, done) {
                 mockContext.executeActionCalls.push(arguments);
                 if (failedRoute.config.action === action) {
@@ -105,6 +114,21 @@ describe('navigateAction', function () {
             expect(mockContext.executeActionCalls.length).to.equal(1);
             expect(mockContext.executeActionCalls[0][0]).to.equal(actionRoute.config.action);
             expect(mockContext.executeActionCalls[0][1]).to.equal(actionRoute);
+            expect(mockContext.executeActionCalls[0][2]).to.be.a('function');
+        });
+    });
+
+    it ('it should call execute action if there is an action as a string', function () {
+        navigateAction(mockContext, {
+            path: '/string'
+        }, function (err) {
+            expect(err).to.equal(undefined);
+            expect(mockContext.dispatchCalls.length).to.equal(2);
+            expect(mockContext.dispatchCalls[1][0]).to.equal('CHANGE_ROUTE_SUCCESS');
+            expect(mockContext.dispatchCalls[1][1]).to.equal(stringActionRoute);
+            expect(mockContext.executeActionCalls.length).to.equal(1);
+            expect(mockContext.executeActionCalls[0][0]).to.equal(fooAction);
+            expect(mockContext.executeActionCalls[0][1]).to.equal(stringActionRoute);
             expect(mockContext.executeActionCalls[0][2]).to.be.a('function');
         });
     });
