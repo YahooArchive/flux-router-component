@@ -58,18 +58,9 @@ describe('NavLink', function () {
             expect(link.props.href).to.equal('/foo');
             expect(link.getDOMNode().textContent).to.equal('bar');
         });
-        it ('both href and name defined', function () {
-            var link = ReactTestUtils.renderIntoDocument(NavLink( {name:"fooo", href:"/foo"}, React.DOM.span(null, "bar")));
-            expect(link.props.href).to.equal('/foo');
-        });
         it ('both href and routeName defined', function () {
             var link = ReactTestUtils.renderIntoDocument(NavLink( {routeName:"fooo", href:"/foo"}, React.DOM.span(null, "bar")));
             expect(link.props.href).to.equal('/foo');
-        });
-        it ('only name defined', function () {
-            var navParams = {a: 1, b: 2},
-                link = ReactTestUtils.renderIntoDocument(NavLink( {name:"foo", navParams:navParams, context:contextMock}, React.DOM.span(null, "bar")));
-            expect(link.props.href).to.equal('/foo/a/1/b/2');
         });
         it ('only routeName defined', function () {
             var navParams = {a: 1, b: 2},
