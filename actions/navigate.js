@@ -1,4 +1,5 @@
-var debug = require('debug')('navigateAction');
+var debug = require('debug')('navigateAction'),
+    url = require('url');
 
 module.exports = function (context, payload, done) {
     if (!context.router || !context.router.getRoute) {
@@ -14,6 +15,12 @@ module.exports = function (context, payload, done) {
         done(err);
         return;
     }
+
+    // add parsed query parameter object to route object,
+    // and make it part of CHANGE_ROUTE_XXX action payload.
+    var parsed = route.path && url.parse(route.path, true);
+    route.query = (parsed && parsed.query) || {};
+
     debug('dispatching CHANGE_ROUTE', route);
     context.dispatch('CHANGE_ROUTE_START', route);
     var action = route.config && route.config.action;
