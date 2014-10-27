@@ -5,6 +5,7 @@ This package provides navigational React components and router React mixin for a
 `NavLink` is the a React component for navigational links.  When the link is clicked, NavLink will dispatch `NAVIGATE` action to flux dispatcher.  The dispatcher can then dispatch the action to the stores that can handle it.
 
 ### Example Usage
+Example of using `NavLink` with `href` property defined:
 ```js
 var NavLink = require('flux-router-component').NavLink;
 
@@ -43,6 +44,8 @@ var Nav = React.createClass({
     }
 });
 ```
+
+We also have another more sophisticated example application, [routing](https://github.com/yahoo/flux-examples/tree/master/routing), that uses `NavLink` with `routeName` property defined.
 
 ## RouterMixin
 `RouterMixin` is a React mixin to be used by application's top level React component to:
