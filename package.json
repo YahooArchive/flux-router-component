@@ -21,6 +21,7 @@
   ],
   "dependencies": {
     "debug": "^2.0.0",
+    "query-string": "^1.0.0",
     "react": "^0.11.1"
   },
   "devDependencies": {

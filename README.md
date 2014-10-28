@@ -78,6 +78,13 @@ User clicks on a link to navigate from the current route `http://mydomain.com/ho
 * Compatibility code example on [Mozilla Developer Network](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget.addEventListener)
 * A few DOM polyfill libaries listed on [Modernizer Polyfill wiki page](https://github.com/Modernizr/Modernizr/wiki/HTML5-Cross-Browser-Polyfills#dom).
 
+`Array.prototype.reduce` and `Array.prototype.map` (used by dependent library, query-string) polyfill examples are provided by:
+
+* [Mozilla Developer Network Array.prototype.reduce polyfill](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce#Polyfill)
+* [Mozilla Developer Network Array.prototype.map polyfill](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map#Polyfill)
+
+You can also look into this [polyfill.io polyfill service](https://cdn.polyfill.io/v1/).
+
 ## License
 This software is free to use under the Yahoo! Inc. BSD license.
 See the [LICENSE file][] for license text and copyright information.

@@ -105,20 +105,21 @@ describe('navigateAction', function () {
     });
 
     it ('should include query param on route match', function () {
+        var path = '/?foo=bar&a=b&a=c&bool#abcd=fff';
         navigateAction(mockContext, {
-            path: '/?foo=bar&a=b'
+            path: path
         }, function (err) {
             expect(err).to.equal(undefined);
             expect(mockContext.routerCalls.length).to.equal(1);
             expect(mockContext.dispatchCalls.length).to.equal(2);
             expect(mockContext.dispatchCalls[0][0]).to.equal('CHANGE_ROUTE_START');
             var route = mockContext.dispatchCalls[0][1];
-            expect(route.path).to.equal('/?foo=bar&a=b');
-            expect(route.query).to.eql({foo: 'bar', a: 'b'}, 'query added to route payload for CHANGE_ROUTE_START' + JSON.stringify(route));
+            expect(route.path).to.equal(path);
+            expect(route.query).to.eql({foo: 'bar', a: ['b', 'c'], bool: null}, 'query added to route payload for CHANGE_ROUTE_START' + JSON.stringify(route));
             expect(mockContext.dispatchCalls[1][0]).to.equal('CHANGE_ROUTE_SUCCESS');
             route = mockContext.dispatchCalls[1][1];
-            expect(route.path).to.equal('/?foo=bar&a=b');
-            expect(route.query).to.eql({foo: 'bar', a: 'b'}, 'query added to route payload for CHANGE_ROUTE_SUCCESS');
+            expect(route.path).to.equal(path);
+            expect(route.query).to.eql({foo: 'bar', a: ['b', 'c'], bool: null}, 'query added to route payload for CHANGE_ROUTE_SUCCESS');
         });
     });
 
