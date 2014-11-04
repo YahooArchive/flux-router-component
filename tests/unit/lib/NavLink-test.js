@@ -87,6 +87,14 @@ describe('NavLink', function () {
                 done();
             }, 10);
         });
+        it ('context.executeAction not called if context does not exist', function (done) {
+            var navParams = {a: 1, b: true},
+                link = ReactTestUtils.renderIntoDocument(NavLink( {href:"/foo", navParams:navParams}, React.DOM.span(null, "bar")));
+            ReactTestUtils.Simulate.click(link.getDOMNode());
+            window.setTimeout(function () {
+                expect(testResult.dispatch).to.equal(undefined);
+                done();
+            }, 10);
+        });
     });
-
 });

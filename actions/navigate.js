@@ -14,6 +14,7 @@ function parseQueryString(path) {
 module.exports = function (context, payload, done) {
     if (!context.router || !context.router.getRoute) {
         debug('no router available for navigate handling');
+        done(new Error('missing router'));
         return;
     }
     debug('executing', payload);
