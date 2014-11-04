@@ -8,7 +8,7 @@
 /**
  * @class HistoryWithHash
  * @constructor
- * @param {Object} [options]  The window object
+ * @param {Object} [options]  The options object
  * @param {Window} [options.win=window]  The window object
  * @param {Boolean} [options.useHashRoute]  Whether to use hash for routing url.
  *                If nothing specified, it will be evaluated as true if pushState feature
