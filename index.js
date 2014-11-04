@@ -8,6 +8,5 @@ module.exports = {
     NavLink: require('./lib/NavLink'),
     RouterMixin: require('./lib/RouterMixin'),
     navigateAction: require('./actions/navigate'),
-    History: require('./lib/History'),
-    HistoryWithHash: require('./lib/HistoryWithHash')
+    History: require('./lib/History')
 };

@@ -101,7 +101,7 @@ This is an example of how you can use and configure `HistoryWithHash`:
 
 ```js
 var RouterMixin = require('flux-router-component').RouterMixin,
-    HistoryWithHash = require('flux-router-component').HistoryWithHash;
+    HistoryWithHash = require('flux-router-component/utils').HistoryWithHash;
 
 var Application = React.createClass({
     mixins: [RouterMixin],
