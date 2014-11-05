@@ -9,8 +9,13 @@ var React,
     jsdom = require('jsdom'),
     expect = require('chai').expect,
     contextMock,
+    onClickMock,
     routerMock,
     testResult;
+
+onClickMock = function () {
+    testResult.onClickMockInvoked = true;
+};
 
 routerMock = {
     makePath: function (name, params) {
@@ -96,5 +101,17 @@ describe('NavLink', function () {
                 done();
             }, 10);
         });
+    });
+
+    it('allow overriding onClick', function (done) {
+        var navParams = {a: 1, b: true},
+            link = ReactTestUtils.renderIntoDocument(NavLink( {href:"/foo", context:contextMock, navParams:navParams, onClick: onClickMock}, React.DOM.span(null, "bar")));
+        expect(testResult.onClickMockInvoked).to.equal(undefined);
+        ReactTestUtils.Simulate.click(link.getDOMNode());
+        window.setTimeout(function () {
+            expect(testResult.dispatch).to.equal(undefined);
+            expect(testResult.onClickMockInvoked).to.equal(true);
+            done();
+        }, 10);
     });
 });
