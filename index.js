@@ -5,6 +5,7 @@
 'use strict';
 
 module.exports = {
+    plugin: require('./lib/router-plugin'),
     NavLink: require('./lib/NavLink'),
     RouterMixin: require('./lib/RouterMixin'),
     navigateAction: require('./actions/navigate'),

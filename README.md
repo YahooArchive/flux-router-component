@@ -1,13 +1,47 @@
-# flux-router-component [![Build Status](https://travis-ci.org/yahoo/flux-router-component.svg?branch=master)](https://travis-ci.org/yahoo/flux-router-component) [![Dependency Status](https://david-dm.org/yahoo/flux-router-component.svg)](https://david-dm.org/yahoo/flux-router-component) [![Coverage Status](https://coveralls.io/repos/yahoo/flux-router-component/badge.png?branch=master)](https://coveralls.io/r/yahoo/flux-router-component?branch=master)
-This package provides navigational React components and router React mixin for applications built with [Flux](http://facebook.github.io/react/docs/flux-overview.html) architecture.  Please check out [examples](https://github.com/yahoo/flux-router-component/tree/master/examples) of how to use these components.
+# fluxible-router 
+[![Build Status](https://travis-ci.org/yahoo/fluxible-router.svg?branch=master)](https://travis-ci.org/yahoo/fluxible-router) [![Dependency Status](https://david-dm.org/yahoo/fluxible-router.svg)](https://david-dm.org/yahoo/fluxible-router) [![Coverage Status](https://coveralls.io/repos/yahoo/fluxible-router/badge.png?branch=master)](https://coveralls.io/r/yahoo/fluxible-router?branch=master)
+This package provides navigational React components and router React mixin for applications built with [Flux](http://facebook.github.io/react/docs/flux-overview.html) architecture.  Please check out [examples](https://github.com/yahoo/fluxible-router/tree/master/examples) of how to use these components.
 
-## NavLink
+## Fluxible Plugin
+
+For use with [fluxible-app](https://github.com/yahoo/fluxible-app):
+
+```js
+var FluxibleApp = require('fluxible-app');
+var routerPlugin = require('fluxible-router').plugin;
+var app = new FluxibleApp();
+
+var pluginInstance = routerPlugin({
+    routes: {
+        user: {
+            path: '/user/:id',
+            method: 'get',
+            // the navigate action will execute this action when the route is matched
+            action: function (actionContext, payload, done) {
+                // ...
+                done();
+            }
+        }
+    }
+});
+
+app.plug(pluginInstance);
+```
+
+Adds the following methods to your fluxible contexts:
+
+ * `actionContext.router.makePath(routeName, routeParams)`: Create a URL based on route name and params
+ * `actionContext.router.getRoute(path)`: Returns matched route
+ * `componentContext.makePath(routeName, routeParams)`: Create a URL based on route name and params
+
+## NavLink Component
+
 `NavLink` is the a React component for navigational links.  When the link is clicked, NavLink will dispatch `NAVIGATE` action to flux dispatcher.  The dispatcher can then dispatch the action to the stores that can handle it.
 
-### Example Usage
 Example of using `NavLink` with `href` property defined:
+
 ```js
-var NavLink = require('flux-router-component').NavLink;
+var NavLink = require('fluxible-router').NavLink;
 
 var Nav = React.createClass({
     render: function () {
@@ -48,6 +82,7 @@ var Nav = React.createClass({
 We also have another more sophisticated example application, [routing](https://github.com/yahoo/flux-examples/tree/master/routing), that uses `NavLink` with `routeName` property defined.
 
 ## RouterMixin
+
 `RouterMixin` is a React mixin to be used by application's top level React component to:
 
 * [manage browser history](#history-management-browser-support-and-hash-based-routing) when route changes, and
@@ -56,7 +91,7 @@ We also have another more sophisticated example application, [routing](https://g
 
 ### Example Usage
 ```js
-var RouterMixin = require('flux-router-component').RouterMixin;
+var RouterMixin = require('fluxible-router').RouterMixin;
 
 var Application = React.createClass({
     mixins: [RouterMixin],
@@ -181,7 +216,7 @@ You can also look into this [polyfill.io polyfill service](https://cdn.polyfill.
 This software is free to use under the Yahoo! Inc. BSD license.
 See the [LICENSE file][] for license text and copyright information.
 
-[LICENSE file]: https://github.com/yahoo/flux-router-component/blob/master/LICENSE.md
+[LICENSE file]: https://github.com/yahoo/fluxible-router/blob/master/LICENSE.md
 
-Third-pary open source code used are listed in our [package.json file]( https://github.com/yahoo/flux-router-component/blob/master/package.json).
+Third-pary open source code used are listed in our [package.json file]( https://github.com/yahoo/fluxible-router/blob/master/package.json).
 

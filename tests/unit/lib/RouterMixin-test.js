@@ -41,7 +41,7 @@ historyMock = function (path) {
 describe ('RouterMixin', function () {
 
     beforeEach(function () {
-        routerMixin = require('../../../lib/RouterMixin');
+        routerMixin = require('../../../').RouterMixin;
         routerMixin.props = {context: contextMock};
         routerMixin.state = {
             route: {}

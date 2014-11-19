@@ -47,7 +47,7 @@ describe('NavLink', function () {
         global.navigator = global.window.navigator;
         React = require('react/addons');
         ReactTestUtils = React.addons.TestUtils;
-        NavLink = React.createFactory(require('../../../lib/NavLink'));
+        NavLink = React.createFactory(require('../../../').NavLink);
         testResult = {};
     });
 
