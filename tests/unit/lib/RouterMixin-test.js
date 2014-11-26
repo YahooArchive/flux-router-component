@@ -46,7 +46,7 @@ describe ('RouterMixin', function () {
         routerMixin.state = {
             route: {}
         };
-        global.window = jsdom.jsdom().createWindow('<html><body></body></html>');
+        global.window = jsdom.jsdom('<html><body></body></html>').defaultView;
         global.document = global.window.document;
         global.navigator = global.window.navigator;
         testResult = {};
