@@ -1,6 +1,10 @@
 # flux-router-component 
 
-[![npm version](https://badge.fury.io/js/flux-router-component.svg)](http://badge.fury.io/js/flux-router-component) [![Build Status](https://travis-ci.org/yahoo/flux-router-component.svg?branch=master)](https://travis-ci.org/yahoo/flux-router-component) [![Dependency Status](https://david-dm.org/yahoo/flux-router-component.svg)](https://david-dm.org/yahoo/flux-router-component) [![Coverage Status](https://coveralls.io/repos/yahoo/flux-router-component/badge.png?branch=master)](https://coveralls.io/r/yahoo/flux-router-component?branch=master)
+[![npm version](https://badge.fury.io/js/flux-router-component.svg)](http://badge.fury.io/js/flux-router-component)
+[![Build Status](https://travis-ci.org/yahoo/flux-router-component.svg?branch=master)](https://travis-ci.org/yahoo/flux-router-component)
+[![Dependency Status](https://david-dm.org/yahoo/flux-router-component.svg)](https://david-dm.org/yahoo/flux-router-component)
+[![devDependency Status](https://david-dm.org/yahoo/flux-router-component/dev-status.svg)](https://david-dm.org/yahoo/flux-router-component#info=devDependencies)
+[![Coverage Status](https://coveralls.io/repos/yahoo/flux-router-component/badge.png?branch=master)](https://coveralls.io/r/yahoo/flux-router-component?branch=master)
 
 Provides navigational React components and router mixin for applications built with [Flux](http://facebook.github.io/react/docs/flux-overview.html) architecture.  Please check out [examples](https://github.com/yahoo/flux-router-component/tree/master/examples) of how to use these components.
 

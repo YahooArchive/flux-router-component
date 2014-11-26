@@ -42,7 +42,7 @@ contextMock = {
 describe('NavLink', function () {
 
     beforeEach(function () {
-        global.window = jsdom.jsdom().createWindow('<html><body></body></html>');
+        global.window = jsdom.jsdom('<html><body></body></html>').defaultView;
         global.document = global.window.document;
         global.navigator = global.window.navigator;
         React = require('react/addons');
