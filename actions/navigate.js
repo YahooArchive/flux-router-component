@@ -18,7 +18,13 @@ module.exports = function (context, payload, done) {
         return;
     }
     debug('executing', payload);
-    var route = context.router.getRoute(payload.path, {navigate: payload});
+    
+    var options = {
+        navigate: payload,
+        method: payload.method
+    };
+
+    var route = context.router.getRoute(payload.path, options);
 
     if (!route) {
         var err = new Error('Url does not exist');
