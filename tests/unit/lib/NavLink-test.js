@@ -80,7 +80,7 @@ describe('NavLink', function () {
     });
 
     describe('dispatchNavAction()', function () {
-        it ('context.executeAction called', function (done) {
+        it ('context.executeAction called for relative urls', function (done) {
             var navParams = {a: 1, b: true},
                 link = ReactTestUtils.renderIntoDocument(NavLink( {href:"/foo", context:contextMock, navParams:navParams}, React.DOM.span(null, "bar")));
             ReactTestUtils.Simulate.click(link.getDOMNode());
@@ -92,9 +92,40 @@ describe('NavLink', function () {
                 done();
             }, 10);
         });
+        it ('context.executeAction called for absolute urls from same origin', function (done) {
+            var navParams = {a: 1, b: true},
+                origin = window.location.origin,
+                link = ReactTestUtils.renderIntoDocument(NavLink( {href: origin + "/foo?x=y", context:contextMock, navParams:navParams}, React.DOM.span(null, "bar")));
+            ReactTestUtils.Simulate.click(link.getDOMNode());
+            window.setTimeout(function () {
+                expect(testResult.dispatch.action).to.equal('NAVIGATE');
+                expect(testResult.dispatch.payload.type).to.equal('click');
+                expect(testResult.dispatch.payload.path).to.equal('/foo?x=y');
+                expect(testResult.dispatch.payload.params).to.eql({a: 1, b: true});
+                done();
+            }, 10);
+        });
         it ('context.executeAction not called if context does not exist', function (done) {
             var navParams = {a: 1, b: true},
                 link = ReactTestUtils.renderIntoDocument(NavLink( {href:"/foo", navParams:navParams}, React.DOM.span(null, "bar")));
+            ReactTestUtils.Simulate.click(link.getDOMNode());
+            window.setTimeout(function () {
+                expect(testResult.dispatch).to.equal(undefined);
+                done();
+            }, 10);
+        });
+        it ('context.executeAction not called for external urls', function (done) {
+            var navParams = {a: 1, b: true},
+                link = ReactTestUtils.renderIntoDocument(NavLink( {href:"http://domain.does.not.exist/foo", navParams:navParams}, React.DOM.span(null, "bar")));
+            ReactTestUtils.Simulate.click(link.getDOMNode());
+            window.setTimeout(function () {
+                expect(testResult.dispatch).to.equal(undefined);
+                done();
+            }, 10);
+        });
+        it ('context.executeAction not called for # urls', function (done) {
+            var navParams = {a: 1, b: true},
+                link = ReactTestUtils.renderIntoDocument(NavLink( {href:"#here", navParams:navParams}, React.DOM.span(null, "bar")));
             ReactTestUtils.Simulate.click(link.getDOMNode());
             window.setTimeout(function () {
                 expect(testResult.dispatch).to.equal(undefined);
