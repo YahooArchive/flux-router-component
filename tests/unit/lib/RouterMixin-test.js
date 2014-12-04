@@ -69,7 +69,7 @@ describe ('RouterMixin', function () {
             expect(testResult.dispatch.payload.params).to.eql({a: 1});
         });
         it ('dispatch navigate event for pages that path does not match', function (done) {
-            routerMixin.props = {context: contextMock, historyCreator: function() { return historyMock(); }};
+            routerMixin.props = {context: contextMock, checkRouteOnPageLoad: true, historyCreator: function() { return historyMock(); }};
             var origPushState = window.history.pushState;
             routerMixin.state = {
                 route: {

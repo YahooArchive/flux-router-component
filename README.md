@@ -88,6 +88,8 @@ Using hash-based url for client side routing has a lot of known issues.  [Histor
 
 But as always, there will be some applications out there that have to use it.  This implementation provides a solution.
 
+If you do decide to use hash route, it is recommended to enable `checkRouteOnPageLoad`.  Because hash fragment (that contains route) does not get sent to the server side, `RouterMixin` will compare the route info from server and route in the hash fragment.  On route mismatch, it will dispatch a navigate action on browser side to load the actual page content for the route represented by the hash fragment.
+
 #### useHashRoute Config
 You can decide when to use hash-based routing through the `useHashRoute` option:
 
