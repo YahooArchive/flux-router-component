@@ -1,6 +1,6 @@
-var debug = require('debug')('navigateAction'),
-    queryString = require('query-string'),
-    searchPattern = /\?([^\#]*)/;
+var debug = require('debug')('navigateAction');
+var queryString = require('query-string');
+var searchPattern = /\?([^\#]*)/;
 
 function parseQueryString(path) {
     var search;

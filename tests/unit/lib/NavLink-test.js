@@ -3,15 +3,15 @@
  * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
  */
 /*globals describe,it,before,beforeEach */
-var React,
-    NavLink,
-    ReactTestUtils,
-    jsdom = require('jsdom'),
-    expect = require('chai').expect,
-    contextMock,
-    onClickMock,
-    routerMock,
-    testResult;
+var React;
+var NavLink;
+var ReactTestUtils;
+var jsdom = require('jsdom');
+var expect = require('chai').expect;
+var contextMock;
+var onClickMock;
+var routerMock;
+var testResult;
 
 onClickMock = function () {
     testResult.onClickMockInvoked = true;
@@ -68,21 +68,21 @@ describe('NavLink', function () {
             expect(link.props.href).to.equal('/foo');
         });
         it ('only routeName defined', function () {
-            var navParams = {a: 1, b: 2},
-                link = ReactTestUtils.renderIntoDocument(NavLink( {routeName:"foo", navParams:navParams, context:contextMock}, React.DOM.span(null, "bar")));
+            var navParams = {a: 1, b: 2};
+            var link = ReactTestUtils.renderIntoDocument(NavLink( {routeName:"foo", navParams:navParams, context:contextMock}, React.DOM.span(null, "bar")));
             expect(link.props.href).to.equal('/foo/a/1/b/2');
         });
         it ('none defined', function () {
-            var navParams = {a: 1, b: 2},
-                link = ReactTestUtils.renderIntoDocument(NavLink( {navParams:navParams, context:contextMock}, React.DOM.span(null, "bar")));
+            var navParams = {a: 1, b: 2};
+            var link = ReactTestUtils.renderIntoDocument(NavLink( {navParams:navParams, context:contextMock}, React.DOM.span(null, "bar")));
             expect(link.props.href).to.equal(undefined);
         });
     });
 
     describe('dispatchNavAction()', function () {
         it ('context.executeAction called for relative urls', function (done) {
-            var navParams = {a: 1, b: true},
-                link = ReactTestUtils.renderIntoDocument(NavLink( {href:"/foo", context:contextMock, navParams:navParams}, React.DOM.span(null, "bar")));
+            var navParams = {a: 1, b: true};
+            var link = ReactTestUtils.renderIntoDocument(NavLink( {href:"/foo", context:contextMock, navParams:navParams}, React.DOM.span(null, "bar")));
             ReactTestUtils.Simulate.click(link.getDOMNode());
             window.setTimeout(function () {
                 expect(testResult.dispatch.action).to.equal('NAVIGATE');
@@ -93,9 +93,9 @@ describe('NavLink', function () {
             }, 10);
         });
         it ('context.executeAction called for absolute urls from same origin', function (done) {
-            var navParams = {a: 1, b: true},
-                origin = window.location.origin,
-                link = ReactTestUtils.renderIntoDocument(NavLink( {href: origin + "/foo?x=y", context:contextMock, navParams:navParams}, React.DOM.span(null, "bar")));
+            var navParams = {a: 1, b: true};
+            var origin = window.location.origin;
+            var link = ReactTestUtils.renderIntoDocument(NavLink( {href: origin + "/foo?x=y", context:contextMock, navParams:navParams}, React.DOM.span(null, "bar")));
             ReactTestUtils.Simulate.click(link.getDOMNode());
             window.setTimeout(function () {
                 expect(testResult.dispatch.action).to.equal('NAVIGATE');
@@ -106,8 +106,8 @@ describe('NavLink', function () {
             }, 10);
         });
         it ('context.executeAction not called if context does not exist', function (done) {
-            var navParams = {a: 1, b: true},
-                link = ReactTestUtils.renderIntoDocument(NavLink( {href:"/foo", navParams:navParams}, React.DOM.span(null, "bar")));
+            var navParams = {a: 1, b: true};
+            var link = ReactTestUtils.renderIntoDocument(NavLink( {href:"/foo", navParams:navParams}, React.DOM.span(null, "bar")));
             ReactTestUtils.Simulate.click(link.getDOMNode());
             window.setTimeout(function () {
                 expect(testResult.dispatch).to.equal(undefined);
@@ -115,8 +115,8 @@ describe('NavLink', function () {
             }, 10);
         });
         it ('context.executeAction not called for external urls', function (done) {
-            var navParams = {a: 1, b: true},
-                link = ReactTestUtils.renderIntoDocument(NavLink( {href:"http://domain.does.not.exist/foo", navParams:navParams}, React.DOM.span(null, "bar")));
+            var navParams = {a: 1, b: true};
+            var link = ReactTestUtils.renderIntoDocument(NavLink( {href:"http://domain.does.not.exist/foo", navParams:navParams}, React.DOM.span(null, "bar")));
             ReactTestUtils.Simulate.click(link.getDOMNode());
             window.setTimeout(function () {
                 expect(testResult.dispatch).to.equal(undefined);
@@ -124,8 +124,8 @@ describe('NavLink', function () {
             }, 10);
         });
         it ('context.executeAction not called for # urls', function (done) {
-            var navParams = {a: 1, b: true},
-                link = ReactTestUtils.renderIntoDocument(NavLink( {href:"#here", navParams:navParams}, React.DOM.span(null, "bar")));
+            var navParams = {a: 1, b: true};
+            var link = ReactTestUtils.renderIntoDocument(NavLink( {href:"#here", navParams:navParams}, React.DOM.span(null, "bar")));
             ReactTestUtils.Simulate.click(link.getDOMNode());
             window.setTimeout(function () {
                 expect(testResult.dispatch).to.equal(undefined);
@@ -135,8 +135,8 @@ describe('NavLink', function () {
     });
 
     it('allow overriding onClick', function (done) {
-        var navParams = {a: 1, b: true},
-            link = ReactTestUtils.renderIntoDocument(NavLink( {href:"/foo", context:contextMock, navParams:navParams, onClick: onClickMock}, React.DOM.span(null, "bar")));
+        var navParams = {a: 1, b: true};
+        var link = ReactTestUtils.renderIntoDocument(NavLink( {href:"/foo", context:contextMock, navParams:navParams, onClick: onClickMock}, React.DOM.span(null, "bar")));
         expect(testResult.onClickMockInvoked).to.equal(undefined);
         ReactTestUtils.Simulate.click(link.getDOMNode());
         window.setTimeout(function () {
