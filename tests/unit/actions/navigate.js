@@ -35,11 +35,17 @@ describe('navigateAction', function () {
                 action: 'foo'
             }
         };
+        postMethodRoute = {
+            config: {
+                action: function () {},
+                method: 'post'
+            }
+        };
         actionCalls = [];
         mockContext = {
             routerCalls: [],
             router: {
-                getRoute: function (path, payload) {
+                getRoute: function (path, options) {
                     mockContext.routerCalls.push(arguments);
                     var parsed = path && url.parse(path);
                     var pathname = parsed && parsed.pathname;
@@ -52,6 +58,8 @@ describe('navigateAction', function () {
                         route = lodash.clone(failedRoute);
                     } else if ('/string' === pathname) {
                         route = lodash.clone(stringActionRoute);
+                    } else if ('/post' === pathname && postMethodRoute.config.method === options.method) {
+                        route = lodash.clone(postMethodRoute);
                     }
                     if (route) {
                         route.path = path;
@@ -179,6 +187,33 @@ describe('navigateAction', function () {
             expect(mockContext.routerCalls.length).to.equal(1);
             expect(err).to.be.an('object');
             expect(err.status).to.equal(404);
+        });
+    });
+
+    it ('should call back with a 404 error if path matches but not method', function () {
+        navigateAction(mockContext, {
+            path: '/post',
+            method: 'get'
+        }, function (err) {
+            expect(mockContext.routerCalls.length).to.equal(1);
+            expect(err).to.be.an('object');
+            expect(err.status).to.equal(404);
+        });
+    });
+
+    it ('should dispatch if both path and method matches', function () {
+        navigateAction(mockContext, {
+            path: '/post',
+            method: 'post'
+        }, function (err) {
+            expect(err).to.equal(undefined);
+            expect(mockContext.routerCalls.length).to.equal(1);
+            expect(mockContext.dispatchCalls.length).to.equal(2);
+            expect(mockContext.dispatchCalls[0][0]).to.equal('CHANGE_ROUTE_START');
+            expect(mockContext.dispatchCalls[0][1].path).to.equal('/post');
+            expect(mockContext.dispatchCalls[0][1].query).to.eql({});
+            expect(mockContext.dispatchCalls[1][0]).to.equal('CHANGE_ROUTE_SUCCESS');
+            expect(mockContext.dispatchCalls[1][1].path).to.equal('/post');
         });
     });
 });
