@@ -109,8 +109,8 @@ By default, the hash fragments are just url paths.  With `HistoryWithHash`, you 
 This is an example of how you can use and configure `HistoryWithHash`:
 
 ```js
-var RouterMixin = require('flux-router-component').RouterMixin,
-    HistoryWithHash = require('flux-router-component/utils').HistoryWithHash;
+var RouterMixin = require('flux-router-component').RouterMixin;
+var HistoryWithHash = require('flux-router-component/utils').HistoryWithHash;
 
 var Application = React.createClass({
     mixins: [RouterMixin],
@@ -148,15 +148,15 @@ Please use `History.js` and `HistoryWithHash.js` as examples.
 
 * on(listener)
 * off(listener)
-* getPath()
+* getUrl()
 * pushState(state, title, url)
 * replaceState(state, title, url)
 
 #### Example:
 
 ```js
-var RouterMixin = require('flux-router-component').RouterMixin,
-    MyHistory = require('MyHistoryManagerIsAwesome');
+var RouterMixin = require('flux-router-component').RouterMixin;
+var MyHistory = require('MyHistoryManagerIsAwesome');
 
 var Application = React.createClass({
     mixins: [RouterMixin],

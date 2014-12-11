@@ -84,10 +84,10 @@ HistoryWithHash.prototype = {
      * Gets the path string (or hash fragment if the history object is
      * configured to use hash for routing),
      * including the pathname and search query (if it exists).
-     * @method getPath
-     * @return {String} The path string that denotes current route path
+     * @method getUrl
+     * @return {String} The url string that denotes current path and query
      */
-    getPath: function () {
+    getUrl: function () {
         var location = this.win.location,
             path = location.pathname + location.search;
 

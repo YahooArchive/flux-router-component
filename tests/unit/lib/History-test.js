@@ -105,7 +105,7 @@ describe('History', function () {
         });
     });
 
-    describe('getPath', function () {
+    describe('getUrl', function () {
         it ('has pushState', function () {
             var win = _.extend(windowMock.HTML5, {
                 location: {
@@ -115,8 +115,8 @@ describe('History', function () {
                 }
             });
             var history = new History({win: win});
-            var path = history.getPath();
-            expect(path).to.equal('/path/to/page');
+            var url = history.getUrl();
+            expect(url).to.equal('/path/to/page');
         });
         it ('has pushState with query', function () {
             var win = _.extend(windowMock.HTML5, {
@@ -126,11 +126,11 @@ describe('History', function () {
                 }
             });
             var history = new History({win: win});
-            var path = history.getPath();
-            expect(path).to.equal('/path/to/page?foo=bar&x=y');
+            var url = history.getUrl();
+            expect(url).to.equal('/path/to/page?foo=bar&x=y');
         });
         it ('no pushState', function () {
-            var win, history, path;
+            var win, history, url;
             win = _.extend(windowMock.OLD, {
                 location: {
                     pathname: '/path/to/page',
@@ -139,8 +139,8 @@ describe('History', function () {
                 }
             });
             history = new History({win: win});
-            path = history.getPath();
-            expect(path).to.equal('/path/to/page');
+            url = history.getUrl();
+            expect(url).to.equal('/path/to/page');
 
             win = _.extend(windowMock.OLD, {
                 location: {
@@ -150,8 +150,8 @@ describe('History', function () {
                 }
             });
             history = new History({win: win});
-            path = history.getPath();
-            expect(path).to.equal('/path/to/page', 'hash=#');
+            url = history.getUrl();
+            expect(url).to.equal('/path/to/page', 'hash=#');
 
             win = _.extend(windowMock.OLD, {
                 location: {
@@ -161,11 +161,11 @@ describe('History', function () {
                 }
             });
             history = new History({win: win});
-            path = history.getPath();
-            expect(path).to.equal('/path/to/page');
+            url = history.getUrl();
+            expect(url).to.equal('/path/to/page');
         });
         it ('no pushState, with query', function () {
-            var win, history, path;
+            var win, history, url;
             win = _.extend(windowMock.OLD, {
                 location: {
                     pathname: '/path/to/page',
@@ -174,8 +174,8 @@ describe('History', function () {
                 }
             });
             history = new History({win: win});
-            path = history.getPath();
-            expect(path).to.equal('/path/to/page?foo=bar&x=y');
+            url = history.getUrl();
+            expect(url).to.equal('/path/to/page?foo=bar&x=y');
         });
     });
 

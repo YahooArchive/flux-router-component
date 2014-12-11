@@ -20,10 +20,10 @@ contextMock = {
     }
 };
 
-historyMock = function (path) {
+historyMock = function (url) {
     return {
-        getPath: function () {
-            return path || '/the_path_from_history';
+        getUrl: function () {
+            return url || '/the_path_from_history';
         },
         on: function (listener) {
             testResult.historyMockOn = listener;
@@ -65,31 +65,31 @@ describe ('RouterMixin', function () {
             window.dispatchEvent({_type: 'popstate', state: {a: 1}});
             expect(testResult.dispatch.action).to.be.a('function');
             expect(testResult.dispatch.payload.type).to.equal('popstate');
-            expect(testResult.dispatch.payload.path).to.equal(window.location.pathname);
+            expect(testResult.dispatch.payload.url).to.equal(window.location.pathname);
             expect(testResult.dispatch.payload.params).to.eql({a: 1});
         });
-        it ('dispatch navigate event for pages that path does not match', function (done) {
+        it ('dispatch navigate event for pages that url does not match', function (done) {
             routerMixin.props = {context: contextMock, checkRouteOnPageLoad: true, historyCreator: function() { return historyMock(); }};
             var origPushState = window.history.pushState;
             routerMixin.state = {
                 route: {
-                    path: '/the_path_from_state'
+                    url: '/the_path_from_state'
                 }
             };
             routerMixin.componentDidMount();
             window.setTimeout(function() {
                 expect(testResult.dispatch.action).to.be.a('function');
                 expect(testResult.dispatch.payload.type).to.equal('pageload');
-                expect(testResult.dispatch.payload.path).to.equal('/the_path_from_history');
+                expect(testResult.dispatch.payload.url).to.equal('/the_path_from_history');
                 done();
             }, 10);
         });
-        it ('does not dispatch navigate event for pages with matching path', function (done) {
+        it ('does not dispatch navigate event for pages with matching url', function (done) {
             routerMixin.props = {context: contextMock, historyCreator: function() { return historyMock(); }};
             var origPushState = window.history.pushState;
             routerMixin.state = {
                 route: {
-                    path: '/the_path_from_history'
+                    url: '/the_path_from_history'
                 }
             };
             routerMixin.componentDidMount();
@@ -113,8 +113,8 @@ describe ('RouterMixin', function () {
 
     describe('componentDidUpdate()', function () {
         it ('no-op on same route', function () {
-            var prevRoute = {path: '/foo'},
-                newRoute = {path: '/foo'};
+            var prevRoute = {url: '/foo'},
+                newRoute = {url: '/foo'};
             routerMixin.props = {context: contextMock, historyCreator: function() { return historyMock('/foo'); }};
             routerMixin.state = {route: newRoute};
             routerMixin.componentDidMount();
@@ -122,8 +122,8 @@ describe ('RouterMixin', function () {
             expect(testResult.pushState).to.equal(undefined);
         });
         it ('do not pushState, navigate.type=popstate', function () {
-            var oldRoute = {path: '/foo'},
-                newRoute = {path: '/bar', navigate: {type: 'popstate'}};
+            var oldRoute = {url: '/foo'},
+                newRoute = {url: '/bar', navigate: {type: 'popstate'}};
             routerMixin.props = {context: contextMock, historyCreator: function() { return historyMock('/foo'); }};
             routerMixin.state = {route: newRoute};
             routerMixin.componentDidMount();
@@ -131,8 +131,8 @@ describe ('RouterMixin', function () {
             expect(testResult.pushState).to.equal(undefined);
         });
         it ('update with different route, navigate.type=click', function () {
-            var oldRoute = {path: '/foo'},
-                newRoute = {path: '/bar', navigate: {type: 'click'}};
+            var oldRoute = {url: '/foo'},
+                newRoute = {url: '/bar', navigate: {type: 'click'}};
             routerMixin.props = {context: contextMock, historyCreator: function() { return historyMock('/foo'); }};
             routerMixin.state = {route: newRoute};
             routerMixin.componentDidMount();
@@ -140,8 +140,8 @@ describe ('RouterMixin', function () {
             expect(testResult.pushState).to.eql({state: null, title: null, url: '/bar'});
         });
         it ('do not pushState, navigate.type=popstate', function () {
-            var oldRoute = {path: '/foo'},
-                newRoute = {path: '/bar', navigate: {type: 'popstate'}};
+            var oldRoute = {url: '/foo'},
+                newRoute = {url: '/bar', navigate: {type: 'popstate'}};
             routerMixin.props = {context: contextMock, historyCreator: function() { return historyMock('/foo'); }};
             routerMixin.state = {route: newRoute};
             routerMixin.componentDidMount();
@@ -149,13 +149,22 @@ describe ('RouterMixin', function () {
             expect(testResult.pushState).to.equal(undefined);
         });
         it ('update with different route, navigate.type=click, with params', function () {
-            var oldRoute = {path: '/foo'},
-                newRoute = {path: '/bar', navigate: {type: 'click', params: {foo: 'bar'}}};
+            var oldRoute = {url: '/foo'},
+                newRoute = {url: '/bar', navigate: {type: 'click', params: {foo: 'bar'}}};
             routerMixin.props = {context: contextMock, historyCreator: function() { return historyMock('/foo'); }};
             routerMixin.state = {route: newRoute};
             routerMixin.componentDidMount();
             routerMixin.componentDidUpdate({},  {route: oldRoute});
             expect(testResult.pushState).to.eql({state: {foo: 'bar'}, title: null, url: '/bar'});
+        });
+        it ('update with same path and different hash, navigate.type=click, with params', function () {
+            var oldRoute = {url: '/foo#hash1'},
+                newRoute = {url: '/foo#hash2', navigate: {type: 'click', params: {foo: 'bar'}}};
+            routerMixin.props = {context: contextMock, historyCreator: function() { return historyMock('/foo#hash1'); }};
+            routerMixin.state = {route: newRoute};
+            routerMixin.componentDidMount();
+            routerMixin.componentDidUpdate({},  {route: oldRoute});
+            expect(testResult.pushState).to.eql({state: {foo: 'bar'}, title: null, url: '/foo#hash2'});
         });
     });
 

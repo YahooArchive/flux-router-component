@@ -121,7 +121,7 @@ describe('HistoryWithHash', function () {
         });
     });
 
-    describe('getPath', function () {
+    describe('getUrl', function () {
         it ('has pushState', function () {
             var win = _.extend({}, windowMock.HTML5, {
                 location: {
@@ -131,8 +131,8 @@ describe('HistoryWithHash', function () {
                 }
             });
             var history = new HistoryWithHash({win: win});
-            var path = history.getPath();
-            expect(path).to.equal('/path/to/page');
+            var url = history.getUrl();
+            expect(url).to.equal('/path/to/page');
         });
         it ('has pushState with query', function () {
             var win = _.extend({}, windowMock.HTML5, {
@@ -142,8 +142,8 @@ describe('HistoryWithHash', function () {
                 }
             });
             var history = new HistoryWithHash({win: win});
-            var path = history.getPath();
-            expect(path).to.equal('/path/to/page?foo=bar&x=y');
+            var url = history.getUrl();
+            expect(url).to.equal('/path/to/page?foo=bar&x=y');
         });
         it ('no pushState', function () {
             var win, history, path;
@@ -155,8 +155,8 @@ describe('HistoryWithHash', function () {
                 }
             });
             history = new HistoryWithHash({win: win});
-            path = history.getPath();
-            expect(path).to.equal('/path/to/abc');
+            url = history.getUrl();
+            expect(url).to.equal('/path/to/abc');
 
             win = _.extend({}, windowMock.OLD, {
                 location: {
@@ -166,8 +166,8 @@ describe('HistoryWithHash', function () {
                 }
             });
             history = new HistoryWithHash({win: win});
-            path = history.getPath();
-            expect(path).to.equal('/path/to/page', 'hash=#');
+            url = history.getUrl();
+            expect(url).to.equal('/path/to/page', 'hash=#');
 
             win = _.extend({}, windowMock.OLD, {
                 location: {
@@ -177,11 +177,11 @@ describe('HistoryWithHash', function () {
                 }
             });
             history = new HistoryWithHash({win: win});
-            path = history.getPath();
-            expect(path).to.equal('/path/to/page');
+            url = history.getUrl();
+            expect(url).to.equal('/path/to/page');
         });
         it ('no pushState, with query', function () {
-            var win, history, path;
+            var win, history, url;
             win = _.extend({}, windowMock.OLD, {
                 location: {
                     pathname: '/path/to/page',
@@ -189,8 +189,8 @@ describe('HistoryWithHash', function () {
                 }
             });
             history = new HistoryWithHash({win: win});
-            path = history.getPath();
-            expect(path).to.equal('/path/to/abc?foo=bar&x=y');
+            url = history.getUrl();
+            expect(url).to.equal('/path/to/abc?foo=bar&x=y');
 
             win = _.extend({}, windowMock.OLD, {
                 location: {
@@ -199,8 +199,8 @@ describe('HistoryWithHash', function () {
                 }
             });
             history = new HistoryWithHash({win: win});
-            path = history.getPath();
-            expect(path).to.equal('/?foo=bar&x=y');
+            url = history.getUrl();
+            expect(url).to.equal('/?foo=bar&x=y');
         });
     });
 
