@@ -2,9 +2,9 @@ var debug = require('debug')('navigateAction');
 var queryString = require('query-string');
 var searchPattern = /\?([^\#]*)/;
 
-function parseQueryString(path) {
+function parseQueryString(url) {
     var search;
-    var matches = path.match(searchPattern);
+    var matches = url.match(searchPattern);
     if (matches) {
         search = matches[1];
     }
@@ -24,7 +24,7 @@ module.exports = function (context, payload, done) {
         method: payload.method
     };
 
-    var route = context.router.getRoute(payload.path, options);
+    var route = context.router.getRoute(payload.url, options);
 
     if (!route) {
         var err = new Error('Url does not exist');
@@ -35,7 +35,7 @@ module.exports = function (context, payload, done) {
 
     // add parsed query parameter object to route object,
     // and make it part of CHANGE_ROUTE_XXX action payload.
-    route.query = parseQueryString(route.path);
+    route.query = parseQueryString(route.url);
 
     debug('dispatching CHANGE_ROUTE', route);
     context.dispatch('CHANGE_ROUTE_START', route);

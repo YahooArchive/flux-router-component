@@ -87,7 +87,7 @@ describe('NavLink', function () {
             window.setTimeout(function () {
                 expect(testResult.dispatch.action).to.equal('NAVIGATE');
                 expect(testResult.dispatch.payload.type).to.equal('click');
-                expect(testResult.dispatch.payload.path).to.equal('/foo');
+                expect(testResult.dispatch.payload.url).to.equal('/foo');
                 expect(testResult.dispatch.payload.params).to.eql({a: 1, b: true});
                 done();
             }, 10);
@@ -100,7 +100,7 @@ describe('NavLink', function () {
             window.setTimeout(function () {
                 expect(testResult.dispatch.action).to.equal('NAVIGATE');
                 expect(testResult.dispatch.payload.type).to.equal('click');
-                expect(testResult.dispatch.payload.path).to.equal('/foo?x=y');
+                expect(testResult.dispatch.payload.url).to.equal('/foo?x=y');
                 expect(testResult.dispatch.payload.params).to.eql({a: 1, b: true});
                 done();
             }, 10);
