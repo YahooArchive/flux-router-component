@@ -64,13 +64,13 @@ var Nav = React.createClass({
 
 #### Example of Using `routeName` Property
 
-Before you continue with this example, you should know that you can always generate the url yourself outside of `NavLink` and pass it to `NavLink` as `href` prop just like the sample above.  Your code will be more straight-forward that way, and you will have more control over how to generate `href`.
+Before you continue with this example, you should know that you can always generate the url yourself outside of `NavLink` and pass it to `NavLink` as `href` prop just like the example above.  Your code will be more straight-forward that way, and you will have more control over how to generate `href` (see more explanations in [the Example Usage section](#example-usage)).
 
-If you choose not to generate `href` yourself and the `context` prop you pass to `NavLink` provides `makePath(routeName, routeParams)`, you can also use the `routeName` prop.  If the `href` prop is not present, `NavLink` will use `this.props.context.makePath(this.props.routeName, this.props.navParams)` to generate the `href` for the anchor element. `navParams` is a hash object containing the route parameters.
+If you choose not to generate `href` yourself and the `context` prop you pass to `NavLink` provides `makePath(routeName, routeParams)`, you can also use the `routeName` prop (and the optional `navParams` prop).  If the `href` prop is not present, `NavLink` will use `this.props.context.makePath(this.props.routeName, this.props.navParams)` to generate the `href` for the anchor element. The `navParams` prop is useful for dynamic routes.  It should be a hash object containing the route parameters and their values.
 
 An example of such context is the `ComponentContext` provided by [fluxible-plugin-routr](https://github.com/yahoo/fluxible-plugin-routr/blob/master/lib/routr-plugin.js#L36), which is a plugin for [fluxible-app](https://github.com/yahoo/fluxible-app).  We have a more sophisticated example application, [routing](https://github.com/yahoo/flux-examples/tree/master/routing), showing how everything works together.
 
-Here is a quick sample code showcasing how to use `routeName` prop along with `navParams` prop:
+Here is a quick example code showcasing how to use `routeName` prop along with `navParams` prop:
 
 ```js
 // assume routes are defined somewhere like this:
