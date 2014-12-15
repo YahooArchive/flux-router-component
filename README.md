@@ -95,13 +95,6 @@ var pages = [
             id: 'a'
         }
         text: 'Article A'
-    },
-    {
-        routeName: 'article',
-        routeParams: {
-            id: 'b'
-        }
-        text: 'Article B'
     }
 ];
 var Nav = React.createClass({
