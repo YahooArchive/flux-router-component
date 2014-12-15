@@ -12,7 +12,17 @@ Provides navigational React components and router mixin for applications built w
 `NavLink` is the a React component for navigational links.  When the link is clicked, NavLink will dispatch `NAVIGATE` action to flux dispatcher.  The dispatcher can then dispatch the action to the stores that can handle it.
 
 ### Example Usage
-Example of using `NavLink` with `href` property defined:
+
+Here are two examples of generating `NavLink` using `href` property, and using `routeName` property.  Using `href` property is better than using `routeName`, because:
+
+* Using `href` makes your code more readible, as it shows exactly how the `href` is generated.
+* Using `routeName` assumes `this.prop.context` has a `makePath()` function, which will be used to generate the `href` from the `routeName` and `navParams` props.
+* Using `routeName` could be more limited, especially when it comes to query string and hash fragment, if the `makePath()` function does not support query string and hash fragment.
+
+#### Example of Using `href` Property (Recommended)
+
+If the url is static, or you can generate the url outside of `Navlink`, you can simply pass the url to `NavLink` as a prop.  Here is an example:
+
 ```js
 var NavLink = require('flux-router-component').NavLink;
 
@@ -20,7 +30,7 @@ var Nav = React.createClass({
     render: function () {
         var pages,
             links,
-            context = this.props.context;  // this should have a router instance and an executeAction function
+            context = this.props.context;  // context should provide executeAction()
         pages = [
             {
                 name: 'home',
@@ -52,7 +62,62 @@ var Nav = React.createClass({
 });
 ```
 
-We also have another more sophisticated example application, [routing](https://github.com/yahoo/flux-examples/tree/master/routing), that uses `NavLink` with `routeName` property defined.
+#### Example of Using `routeName` Property
+
+Before you continue with this example, you should know that you can always generate the url yourself outside of `NavLink` and pass it to `NavLink` as `href` prop just like the example above.  Your code will be more straight-forward that way, and you will have more control over how to generate `href` (see more explanations in [the Example Usage section](#example-usage)).
+
+If you choose not to generate `href` yourself and the `context` prop you pass to `NavLink` provides `makePath(routeName, routeParams)`, you can also use the `routeName` prop (and the optional `navParams` prop).  If the `href` prop is not present, `NavLink` will use `this.props.context.makePath(this.props.routeName, this.props.navParams)` to generate the `href` for the anchor element. The `navParams` prop is useful for dynamic routes.  It should be a hash object containing the route parameters and their values.
+
+An example of such context is the `ComponentContext` provided by [fluxible-plugin-routr](https://github.com/yahoo/fluxible-plugin-routr/blob/master/lib/routr-plugin.js#L36), which is a plugin for [fluxible-app](https://github.com/yahoo/fluxible-app).  We have a more sophisticated example application, [routing](https://github.com/yahoo/flux-examples/tree/master/routing), showing how everything works together.
+
+Here is a quick example code showcasing how to use `routeName` prop along with `navParams` prop:
+
+```js
+// assume routes are defined somewhere like this:
+// var routes = {
+//     home: {
+//         path: '/',
+//         page: 'home'
+//     },
+//     article: {
+//         path: '/article/:id',
+//         page: 'article'
+//     }
+// };
+var pages = [
+    {
+        routeName: 'home',
+        text: 'Home'
+    },
+    {
+        routeName: 'article',
+        routeParams: {
+            id: 'a'
+        }
+        text: 'Article A'
+    }
+];
+var Nav = React.createClass({
+    render: function () {
+        var context = this.props.context;  // context should provide executeAction() and makePath()
+        var links = pages.map(function (page) {
+            return (
+                <li className="navItem">
+                    <NavLink routeName={page.routeName} navParams={page.routeParams} context={context}>
+                        {page.text}
+                    </NavLink>
+                </li>
+            );
+        });
+        return (
+            <ul className="nav">
+                {links}
+            </ul>
+        );
+    }
+});
+```
+
 
 ## RouterMixin
 `RouterMixin` is a React mixin to be used by application's top level React component to:
