@@ -167,7 +167,7 @@ describe('HistoryWithHash', function () {
             });
             history = new HistoryWithHash({win: win});
             url = history.getUrl();
-            expect(url).to.equal('/path/to/page', 'hash=#');
+            expect(url).to.equal('/', 'hash=#');
 
             win = _.extend({}, windowMock.OLD, {
                 location: {
@@ -178,7 +178,11 @@ describe('HistoryWithHash', function () {
             });
             history = new HistoryWithHash({win: win});
             url = history.getUrl();
-            expect(url).to.equal('/path/to/page');
+            expect(url).to.equal('/');
+
+            history = new HistoryWithHash({win: win, defaultHashRoute: '/default'});
+            url = history.getUrl();
+            expect(url).to.equal('/default');
         });
         it ('no pushState, with query', function () {
             var win, history, url;
