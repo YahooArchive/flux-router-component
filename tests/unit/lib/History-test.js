@@ -105,6 +105,17 @@ describe('History', function () {
         });
     });
 
+    describe('getState', function () {
+        it ('has pushState', function () {
+            var history = new History({win: _.merge({history: {state: {foo: 'bar'}}}, windowMock.HTML5)});
+            expect(history.getState()).to.eql({foo: 'bar'});
+        });
+        it ('no pushState', function () {
+            var history = new History({win: windowMock.OLD});
+            expect(history.getState()).to.eql(null);
+        });
+    });
+
     describe('getUrl', function () {
         it ('has pushState', function () {
             var win = _.extend(windowMock.HTML5, {
@@ -204,6 +215,9 @@ describe('History', function () {
 
             history.pushState({foo: 'bar'}, 't', '/url?a=b&x=y');
             expect(win.location.href).to.equal('/url?a=b&x=y');
+
+            history.pushState({foo: 'bar'});
+            expect(win.location.href).to.equal('/url?a=b&x=y');
         });
     });
 
@@ -234,6 +248,9 @@ describe('History', function () {
             expect(testResult.locationReplace.url).to.equal('/url');
             history.replaceState({foo: 'bar'}, 't', '/url?a=b&x=y');
             expect(testResult.locationReplace.url).to.equal('/url?a=b&x=y');
+            testResult.locationReplace.url = null;
+            history.replaceState({foo: 'bar'});
+            expect(testResult.locationReplace.url).to.equal(null);
         });
     });
 

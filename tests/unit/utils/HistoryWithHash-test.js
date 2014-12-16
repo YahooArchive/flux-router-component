@@ -121,6 +121,17 @@ describe('HistoryWithHash', function () {
         });
     });
 
+    describe('getState', function () {
+        it ('has pushState', function () {
+            var history = new HistoryWithHash({win: _.merge({history: {state: {foo: 'bar'}}}, windowMock.HTML5)});
+            expect(history.getState()).to.eql({foo: 'bar'});
+        });
+        it ('no pushState', function () {
+            var history = new HistoryWithHash({win: windowMock.OLD});
+            expect(history.getState()).to.eql(null);
+        });
+    });
+
     describe('getUrl', function () {
         it ('has pushState', function () {
             var win = _.extend({}, windowMock.HTML5, {
@@ -327,6 +338,10 @@ describe('HistoryWithHash', function () {
 
             history.replaceState({foo: 'bar'}, 't', '/url?a=b&x=y');
             expect(testResult.locationReplace.url).to.equal('/url?a=b&x=y');
+
+            testResult.locationReplace.url = null;
+            history.replaceState({foo: 'bar'});
+            expect(testResult.locationReplace.url).to.equal(null);
         });
         it ('useHashRouter=true; has pushState', function () {
             var win = _.extend({}, windowMock.HTML5, {
@@ -382,7 +397,6 @@ describe('HistoryWithHash', function () {
                     replace: function(url) {
                         testResult.locationReplace = {url: url};
                     }
-
                 }
             });
             var history = new HistoryWithHash({win: win, useHashRoute: true});
@@ -390,6 +404,9 @@ describe('HistoryWithHash', function () {
             expect(testResult.locationReplace.url).to.equal('/path?foo=bar#/url');
             history.replaceState({foo: 'bar'}, 't', '/url?a=b&x=y');
             expect(testResult.locationReplace.url).to.equal('/path?foo=bar#/url?a=b&x=y');
+            testResult.locationReplace.url = null;
+            history.replaceState({foo: 'bar'});
+            expect(testResult.locationReplace.url).to.equal(null);
         });
     });
 
