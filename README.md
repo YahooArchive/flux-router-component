@@ -124,7 +124,7 @@ var Nav = React.createClass({
 
 * [manage browser history](#history-management-browser-support-and-hash-based-routing) when route changes, and
 * execute navigate action and then dispatch `CHANGE_ROUTE_START` and `CHANGE_ROUTE_SUCCESS` or `CHANGE_ROUTE_FAILURE` events via flux dispatcher on window `popstate` events
-
+* [manage scroll position](#scroll-position-management) when navigating between pages
 
 ### Example Usage
 ```js
@@ -214,6 +214,7 @@ Please use `History.js` and `HistoryWithHash.js` as examples.
 * on(listener)
 * off(listener)
 * getUrl()
+* getState()
 * pushState(state, title, url)
 * replaceState(state, title, url)
 
@@ -233,6 +234,30 @@ var appComponent = Application({
     historyCreator: function historyCreator() {
         return new MyHistory();
     }
+});
+
+```
+
+## Scroll Position Management
+
+`RouterMixin` has a built-in mechanism for managing scroll position upon page navigation, for modern browsers that support native history state:
+
+* reset scroll position to `(0, 0)` when user clicks on a link and navigates to a new page, and
+* restore scroll position to last visited state when user clicks forward and back buttons to navigate between pages.
+
+If you want to disable this behavior, you can set `enableScroll` prop to `false` for `RouterMixin`.  This is an example of how it can be done:
+
+```js
+var RouterMixin = require('flux-router-component').RouterMixin;
+
+var Application = React.createClass({
+    mixins: [RouterMixin],
+    ...
+});
+
+var appComponent = Application({
+    ...
+    enableScroll: false
 });
 
 ```

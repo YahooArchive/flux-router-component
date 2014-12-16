@@ -3,13 +3,14 @@
  * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
  */
 /*globals describe,it,before,beforeEach */
-var expect = require('chai').expect,
-    routerMixin,
-    contextMock,
-    historyMock,
-    jsdom = require('jsdom'),
-    lodash = require('lodash'),
-    testResult;
+var expect = require('chai').expect;
+var routerMixin;
+var contextMock;
+var historyMock;
+var scrollToMock;
+var jsdom = require('jsdom');
+var lodash = require('lodash');
+var testResult;
 
 contextMock = {
     executeAction: function (action, payload) {
@@ -20,10 +21,13 @@ contextMock = {
     }
 };
 
-historyMock = function (url) {
+historyMock = function (url, state) {
     return {
         getUrl: function () {
             return url || '/the_path_from_history';
+        },
+        getState: function () {
+            return state;
         },
         on: function (listener) {
             testResult.historyMockOn = listener;
@@ -34,8 +38,20 @@ historyMock = function (url) {
                 title: title,
                 url: url
             };
+        },
+        replaceState: function (state, title, url) {
+            testResult.replaceState = {
+                state: state,
+                title: title,
+                url: url
+            };
         }
     };
+};
+
+scrollToMock = function (x, y) {
+    console.log('scrollToMock', x, y);
+    testResult.scrollTo = {x: x, y: y};
 };
 
 describe ('RouterMixin', function () {
@@ -49,6 +65,7 @@ describe ('RouterMixin', function () {
         global.window = jsdom.jsdom('<html><body></body></html>').defaultView;
         global.document = global.window.document;
         global.navigator = global.window.navigator;
+        global.window.scrollTo = scrollToMock;
         testResult = {};
     });
 
@@ -62,11 +79,21 @@ describe ('RouterMixin', function () {
         it ('listen to popstate event', function () {
             routerMixin.componentDidMount();
             expect(routerMixin._historyListener).to.be.a('function');
-            window.dispatchEvent({_type: 'popstate', state: {a: 1}});
+            window.dispatchEvent({_type: 'popstate', state: {params: {a: 1}}});
             expect(testResult.dispatch.action).to.be.a('function');
             expect(testResult.dispatch.payload.type).to.equal('popstate');
             expect(testResult.dispatch.payload.url).to.equal(window.location.pathname);
             expect(testResult.dispatch.payload.params).to.eql({a: 1});
+        });
+        it ('listen to scroll event', function (done) {
+            routerMixin.props = {context: contextMock, historyCreator: function() { return historyMock('/foo'); }};
+            routerMixin.componentDidMount();
+            expect(routerMixin._scrollListener).to.be.a('function');
+            window.dispatchEvent({_type: 'scroll'});
+            window.setTimeout(function() {
+                expect(testResult.replaceState).to.eql({state: {scroll: {x: 0, y: 0}}, title: undefined, url: undefined});
+                done();
+            }, 250);
         });
         it ('dispatch navigate event for pages that url does not match', function (done) {
             routerMixin.props = {context: contextMock, checkRouteOnPageLoad: true, historyCreator: function() { return historyMock(); }};
@@ -106,7 +133,7 @@ describe ('RouterMixin', function () {
             expect(routerMixin._historyListener).to.be.a('function');
             routerMixin.componentWillUnmount();
             expect(routerMixin._historyListener).to.equal(null);
-            window.dispatchEvent({_type: 'popstate', state: {a: 1}});
+            window.dispatchEvent({_type: 'popstate', state: {params: {a: 1}}});
             expect(testResult.dispatch).to.equal(undefined);
         });
     });
@@ -130,23 +157,67 @@ describe ('RouterMixin', function () {
             routerMixin.componentDidUpdate({},  {route: oldRoute});
             expect(testResult.pushState).to.equal(undefined);
         });
-        it ('update with different route, navigate.type=click', function () {
+        it ('update with different route, navigate.type=click, reset scroll position', function () {
             var oldRoute = {url: '/foo'},
                 newRoute = {url: '/bar', navigate: {type: 'click'}};
-            routerMixin.props = {context: contextMock, historyCreator: function() { return historyMock('/foo'); }};
+            routerMixin.props = {
+                context: contextMock,
+                historyCreator: function() {
+                    return historyMock('/foo');
+                }
+            };
             routerMixin.state = {route: newRoute};
             routerMixin.componentDidMount();
             routerMixin.componentDidUpdate({},  {route: oldRoute});
-            expect(testResult.pushState).to.eql({state: null, title: null, url: '/bar'});
+            expect(testResult.pushState).to.eql({state: {params: {}, scroll: {x: 0, y: 0}}, title: null, url: '/bar'});
+            expect(testResult.scrollTo).to.eql({x: 0, y: 0});
         });
-        it ('do not pushState, navigate.type=popstate', function () {
+        it ('update with different route, navigate.type=click, enableScroll=false, do not reset scroll position', function () {
+            var oldRoute = {url: '/foo'},
+                newRoute = {url: '/bar', navigate: {type: 'click'}};
+            routerMixin.props = {
+                context: contextMock,
+                enableScroll: false,
+                historyCreator: function() {
+                    return historyMock('/foo');
+                }
+            };
+            routerMixin.state = {route: newRoute};
+            routerMixin.componentDidMount();
+            routerMixin.componentDidUpdate({},  {route: oldRoute});
+            expect(testResult.pushState).to.eql({state: {params: {}}, title: null, url: '/bar'});
+            expect(testResult.scrollTo).to.equal(undefined);
+        });
+        it ('do not pushState, navigate.type=popstate, restore scroll position', function () {
             var oldRoute = {url: '/foo'},
                 newRoute = {url: '/bar', navigate: {type: 'popstate'}};
-            routerMixin.props = {context: contextMock, historyCreator: function() { return historyMock('/foo'); }};
+            routerMixin.props = {
+                context: contextMock,
+                historyCreator: function() {
+                    return historyMock('/foo', {scroll: {x: 12, y: 200}});
+                }
+            };
             routerMixin.state = {route: newRoute};
             routerMixin.componentDidMount();
-            routerMixin.componentDidUpdate({},  {route: oldRoute});
+            routerMixin.componentDidUpdate({}, {route: oldRoute});
             expect(testResult.pushState).to.equal(undefined);
+            expect(testResult.scrollTo).to.eql({x: 12, y: 200});
+        });
+        it ('do not pushState, navigate.type=popstate, enableScroll=false, restore scroll position', function () {
+            var oldRoute = {url: '/foo'},
+                newRoute = {url: '/bar', navigate: {type: 'popstate'}};
+            routerMixin.props = {
+                context: contextMock,
+                enableScroll: false,
+                historyCreator: function() {
+                    return historyMock('/foo', {scroll: {x: 12, y: 200}});
+                }
+            };
+            routerMixin.state = {route: newRoute};
+            routerMixin.componentDidMount();
+            routerMixin.componentDidUpdate({}, {route: oldRoute});
+            expect(testResult.pushState).to.equal(undefined);
+            expect(testResult.scrollTo).to.eql(undefined);
         });
         it ('update with different route, navigate.type=click, with params', function () {
             var oldRoute = {url: '/foo'},
@@ -155,7 +226,7 @@ describe ('RouterMixin', function () {
             routerMixin.state = {route: newRoute};
             routerMixin.componentDidMount();
             routerMixin.componentDidUpdate({},  {route: oldRoute});
-            expect(testResult.pushState).to.eql({state: {foo: 'bar'}, title: null, url: '/bar'});
+            expect(testResult.pushState).to.eql({state: {params: {foo: 'bar'}, scroll: {x: 0, y:0}}, title: null, url: '/bar'});
         });
         it ('update with same path and different hash, navigate.type=click, with params', function () {
             var oldRoute = {url: '/foo#hash1'},
@@ -164,7 +235,7 @@ describe ('RouterMixin', function () {
             routerMixin.state = {route: newRoute};
             routerMixin.componentDidMount();
             routerMixin.componentDidUpdate({},  {route: oldRoute});
-            expect(testResult.pushState).to.eql({state: {foo: 'bar'}, title: null, url: '/foo#hash2'});
+            expect(testResult.pushState).to.eql({state: {params: {foo: 'bar'}, scroll: {x: 0, y:0}}, title: null, url: '/foo#hash2'});
         });
     });
 

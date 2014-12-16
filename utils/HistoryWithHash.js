@@ -81,6 +81,14 @@ HistoryWithHash.prototype = {
     },
 
     /**
+     * @method getState
+     * @return {Object|null} The state object in history
+     */
+    getState: function () {
+        return (this.win.history && this.win.history.state) || null;
+    },
+
+    /**
      * Gets the path string (or hash fragment if the history object is
      * configured to use hash for routing),
      * including the pathname and search query (if it exists).
@@ -117,14 +125,15 @@ HistoryWithHash.prototype = {
                 hash = '#' + hash;
             }
             if (this._hasPushState) {
-                history.pushState(state, title, location.pathname + location.search + hash);
-            } else {
+                url = hash ? location.pathname + location.search + hash : null;
+                history.pushState(state, title, url);
+            } else if (hash) {
                 location.hash = hash;
             }
         } else {
             if (this._hasPushState) {
                 history.pushState(state, title, url);
-            } else {
+            } else if (url) {
                 location.href = url;
             }
         }
@@ -149,16 +158,17 @@ HistoryWithHash.prototype = {
             if (hash) {
                 hash = '#' + hash;
             }
-            url = location.pathname + location.search + hash;
             if (this._hasPushState) {
+                url = hash ? (location.pathname + location.search + hash) : null;
                 history.replaceState(state, title, url);
-            } else {
+            } else if (url) {
+                url = location.pathname + location.search + hash;
                 location.replace(url);
             }
         } else {
             if (this._hasPushState) {
                 history.replaceState(state, title, url);
-            } else {
+            } else if (url) {
                 location.replace(url);
             }
         }
