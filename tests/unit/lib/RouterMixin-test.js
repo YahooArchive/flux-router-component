@@ -90,6 +90,7 @@ describe ('RouterMixin', function () {
             routerMixin.componentDidMount();
             expect(routerMixin._scrollListener).to.be.a('function');
             window.dispatchEvent({_type: 'scroll'});
+            window.dispatchEvent({_type: 'scroll'});
             window.setTimeout(function() {
                 expect(testResult.replaceState).to.eql({state: {scroll: {x: 0, y: 0}}, title: undefined, url: undefined});
                 done();
