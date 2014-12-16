@@ -13,6 +13,8 @@
  * @param {Boolean} [options.useHashRoute]  Whether to use hash for routing url.
  *                If nothing specified, it will be evaluated as true if pushState feature
  *                is not available in the window object's history object; false otherwise.
+ * @param {String} [options.defaultHashRoute='/'] Only used when options.useHashRoute is enabled and
+                  the location url does not have any hash fragment.
  * @param {Object} [options.hashRouteTransformer]  A custom transformer can be provided
  *                to transform the hash to the desired syntax.
  * @param {Function} [options.hashRouteTransformer.transform]  transforms hash route string
@@ -36,6 +38,7 @@ function HistoryWithHash(options) {
         // default behavior is to check whether browser has pushState support
         this._useHashRoute = !this._hasPushState;
     }
+    this._defaultHashRoute = options.defaultHashRoute || '/';
 
     // allow custom syntax for hash
     if (options.hashRouteTransformer) {
@@ -66,16 +69,16 @@ HistoryWithHash.prototype = {
 
     /**
      * Returns the hash fragment in current window location.
-     * @method _getHash
+     * @method _getHashRoute
      * @return {String} The hash fragment string (without the # prefix).
      * @private
      */
-    _getHash: function () {
+    _getHashRoute: function () {
         var hash = this.win.location.hash,
             transformer = this._hashRouteTransformer;
 
         // remove the '#' prefix
-        hash = hash.substring(1) || '';
+        hash = hash.substring(1) || this._defaultHashRoute;
 
         return (transformer && transformer.reverse) ? transformer.reverse(hash) : hash;
     },
@@ -92,7 +95,7 @@ HistoryWithHash.prototype = {
             path = location.pathname + location.search;
 
         if (this._useHashRoute) {
-            return this._getHash() || path;
+            return this._getHashRoute();
         }
         return path;
     },

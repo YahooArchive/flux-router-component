@@ -186,8 +186,12 @@ var appComponent = Application({
     ...
     historyCreator: function historyCreator() {
         return new HistoryWithHash({
-            useHashRoute: true, // optional
-            hashRouteTransformer: {  // optional transformer for custom hash route syntax
+            // optional. Defaults to true if browser does not support pushState; false otherwise.
+            useHashRoute: true,
+            // optional. Defaults to '/'. Used when url has no hash fragment
+            defaultHashRoute: '/default',
+            // optional. Transformer for custom hash route syntax
+            hashRouteTransformer: {
                 transform: function (original) {
                     // transform url hash fragment from '/new/path' to 'new-path'
                     var transformed = original.replace('/', '-').replace(/^(\-+)/, '');
