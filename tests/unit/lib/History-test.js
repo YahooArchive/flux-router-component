@@ -194,6 +194,11 @@ describe('History', function () {
         it ('has pushState', function () {
             var history = new History({win: windowMock.HTML5});
 
+            history.pushState({foo: 'bar'});
+            expect(testResult.pushState.state).to.eql({foo: 'bar'});
+            expect(testResult.pushState.title).to.equal(undefined);
+            expect(testResult.pushState.url).to.equal(undefined);
+
             history.pushState({foo: 'bar'}, 't', '/url');
             expect(testResult.pushState.state).to.eql({foo: 'bar'});
             expect(testResult.pushState.title).to.equal('t');
@@ -224,6 +229,12 @@ describe('History', function () {
     describe('replaceState', function () {
         it ('has pushState', function () {
             var history = new History({win: windowMock.HTML5});
+
+            history.replaceState({foo: 'bar'});
+            expect(testResult.replaceState.state).to.eql({foo: 'bar'});
+            expect(testResult.replaceState.title).to.equal(undefined);
+            expect(testResult.replaceState.url).to.equal(undefined);
+
             history.replaceState({foo: 'bar'}, 't', '/url');
             expect(testResult.replaceState.state).to.eql({foo: 'bar'});
             expect(testResult.replaceState.title).to.equal('t');
