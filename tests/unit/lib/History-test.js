@@ -199,6 +199,11 @@ describe('History', function () {
             expect(testResult.pushState.title).to.equal(undefined);
             expect(testResult.pushState.url).to.equal(undefined);
 
+            history.pushState({foo: 'bar'}, 't');
+            expect(testResult.pushState.state).to.eql({foo: 'bar'});
+            expect(testResult.pushState.title).to.equal('t');
+            expect(testResult.pushState.url).to.equal(undefined);
+
             history.pushState({foo: 'bar'}, 't', '/url');
             expect(testResult.pushState.state).to.eql({foo: 'bar'});
             expect(testResult.pushState.title).to.equal('t');
@@ -233,6 +238,11 @@ describe('History', function () {
             history.replaceState({foo: 'bar'});
             expect(testResult.replaceState.state).to.eql({foo: 'bar'});
             expect(testResult.replaceState.title).to.equal(undefined);
+            expect(testResult.replaceState.url).to.equal(undefined);
+
+            history.replaceState({foo: 'bar'}, 't');
+            expect(testResult.replaceState.state).to.eql({foo: 'bar'});
+            expect(testResult.replaceState.title).to.equal('t');
             expect(testResult.replaceState.url).to.equal(undefined);
 
             history.replaceState({foo: 'bar'}, 't', '/url');
