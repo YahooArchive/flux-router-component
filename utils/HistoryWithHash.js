@@ -135,7 +135,7 @@ HistoryWithHash.prototype = {
             }
         } else {
             if (this._hasPushState) {
-                history.pushState.apply(null, arguments);
+                history.pushState.apply(history, arguments);
             } else if (url) {
                 location.href = url;
             }
@@ -170,7 +170,7 @@ HistoryWithHash.prototype = {
             }
         } else {
             if (this._hasPushState) {
-                history.replaceState.apply(null, arguments);
+                history.replaceState.apply(history, arguments);
             } else if (url) {
                 location.replace(url);
             }
