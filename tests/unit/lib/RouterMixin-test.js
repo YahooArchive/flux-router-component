@@ -112,6 +112,23 @@ describe ('RouterMixin', function () {
                 done();
             }, 10);
         });
+        it ('dispatch navigate event for pages that url does not match; executeAction on this.context', function (done) {
+            routerMixin.props = {checkRouteOnPageLoad: true, historyCreator: function() { return historyMock(); }};
+            routerMixin.context = contextMock;
+            var origPushState = window.history.pushState;
+            routerMixin.state = {
+                route: {
+                    url: '/the_path_from_state'
+                }
+            };
+            routerMixin.componentDidMount();
+            window.setTimeout(function() {
+                expect(testResult.dispatch.action).to.be.a('function');
+                expect(testResult.dispatch.payload.type).to.equal('pageload');
+                expect(testResult.dispatch.payload.url).to.equal('/the_path_from_history');
+                done();
+            }, 10);
+        });
         it ('does not dispatch navigate event for pages with matching url', function (done) {
             routerMixin.props = {context: contextMock, historyCreator: function() { return historyMock(); }};
             var origPushState = window.history.pushState;
