@@ -28,7 +28,6 @@
   },
   "devDependencies": {
     "chai": "^1.9.1",
-    "contextify": "0.1.9",
     "coveralls": "^2.11.1",
     "grunt": "^0.4.5",
     "grunt-cli": "^0.1.0",
