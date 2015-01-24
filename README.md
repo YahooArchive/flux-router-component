@@ -46,6 +46,8 @@ var NavLink = require('flux-router-component').NavLink;
 
 var Nav = React.createClass({
     render: function () {
+        // This example is using this.props.context for Nav and NavLink components.
+        // You can also use the React context, as described in [the Context section](#context-and-expected-context-methods)
         var pages,
             links,
             context = this.props.context;
@@ -116,7 +118,10 @@ var pages = [
 ];
 var Nav = React.createClass({
     render: function () {
-        var context = this.context || this.props.context;  // context should provide executeAction() and makePath()
+        // context should provide executeAction() and makePath().
+        // This example is using this.props.context for Nav and NavLink components.
+        // You can also use the React context, as described in [the Context section](#context-and-expected-context-methods)
+        var context = this.props.context;
         var links = pages.map(function (page) {
             return (
                 <li className="navItem">
