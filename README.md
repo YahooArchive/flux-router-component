@@ -6,7 +6,24 @@
 [![devDependency Status](https://david-dm.org/yahoo/flux-router-component/dev-status.svg)](https://david-dm.org/yahoo/flux-router-component#info=devDependencies)
 [![Coverage Status](https://coveralls.io/repos/yahoo/flux-router-component/badge.png?branch=master)](https://coveralls.io/r/yahoo/flux-router-component?branch=master)
 
-Provides navigational React components and router mixin for applications built with [Flux](http://facebook.github.io/react/docs/flux-overview.html) architecture.  Please check out [examples](https://github.com/yahoo/flux-router-component/tree/master/examples) of how to use these components.
+Provides navigational React components (`NavLink`) and router mixin (`RouterMixin`) for applications built with [Flux](http://facebook.github.io/react/docs/flux-overview.html) architecture.  Please check out [examples](https://github.com/yahoo/flux-router-component/tree/master/examples) of how to use these components.
+
+## Context and Expected Context Methods
+Before we explain how to use `NavLink` and `RouterMixin`, lets start with two methods they expect:
+
+* executeAction(navigateAction, payload) - This executes navigate action, switches the app to the new route, and update the url.
+* makePath(routeName, routeParams) - This is used to generate url for a given route.
+
+These two methods need to be available in:
+
+* the React context of the component (access via `this.context` in the component), or
+* the `context` prop of the component (`this.props.context`)
+* If exists in both `this.context` and `this.props.context`, the one in `this.context` takes higher precedence.
+
+An example of such context is the `ComponentContext` provided by [fluxible-plugin-routr](https://github.com/yahoo/fluxible-plugin-routr/blob/master/lib/routr-plugin.js#L36), which is a plugin for [fluxible](https://github.com/yahoo/fluxible).  We have a more sophisticated example application, [routing](https://github.com/yahoo/flux-examples/tree/master/routing), showing how everything works together.
+
+**Note** that React context is an undocumented feature, so its API could change without notice.  Here is [a blog from Dave King](https://www.tildedave.com/2014/11/15/introduction-to-contexts-in-react-js.html) that explains what it is and how to use it.
+
 
 ## NavLink
 `NavLink` is the a React component for navigational links.  When the link is clicked, NavLink will dispatch `NAVIGATE` action to flux dispatcher.  The dispatcher can then dispatch the action to the stores that can handle it.
@@ -16,7 +33,7 @@ Provides navigational React components and router mixin for applications built w
 Here are two examples of generating `NavLink` using `href` property, and using `routeName` property.  Using `href` property is better than using `routeName`, because:
 
 * Using `href` makes your code more readible, as it shows exactly how the `href` is generated.
-* Using `routeName` assumes `this.prop.context` has a `makePath()` function, which will be used to generate the `href` from the `routeName` and `navParams` props.
+* Using `routeName` assumes `this.context` or `this.prop.context` has a `makePath()` function, which will be used to generate the `href` from the `routeName` and `navParams` props.
 * Using `routeName` could be more limited, especially when it comes to query string and hash fragment, if the `makePath()` function does not support query string and hash fragment.
 
 #### Example of Using `href` Property (Recommended)
@@ -30,7 +47,7 @@ var Nav = React.createClass({
     render: function () {
         var pages,
             links,
-            context = this.props.context;  // context should provide executeAction()
+            context = this.props.context;
         pages = [
             {
                 name: 'home',
@@ -66,9 +83,8 @@ var Nav = React.createClass({
 
 Before you continue with this example, you should know that you can always generate the url yourself outside of `NavLink` and pass it to `NavLink` as `href` prop just like the example above.  Your code will be more straight-forward that way, and you will have more control over how to generate `href` (see more explanations in [the Example Usage section](#example-usage)).
 
-If you choose not to generate `href` yourself and the `context` prop you pass to `NavLink` provides `makePath(routeName, routeParams)`, you can also use the `routeName` prop (and the optional `navParams` prop).  If the `href` prop is not present, `NavLink` will use `this.props.context.makePath(this.props.routeName, this.props.navParams)` to generate the `href` for the anchor element. The `navParams` prop is useful for dynamic routes.  It should be a hash object containing the route parameters and their values.
+If you choose not to generate `href` yourself and the `context` prop you pass to `NavLink` provides `makePath(routeName, routeParams)`, you can also use the `routeName` prop (and the optional `navParams` prop).  If the `href` prop is not present, `NavLink` will use `makePath(this.props.routeName, this.props.navParams)` from either `this.context` or `this.props.context` to generate the `href` for the anchor element. The `navParams` prop is useful for dynamic routes.  It should be a hash object containing the route parameters and their values.
 
-An example of such context is the `ComponentContext` provided by [fluxible-plugin-routr](https://github.com/yahoo/fluxible-plugin-routr/blob/master/lib/routr-plugin.js#L36), which is a plugin for [fluxible](https://github.com/yahoo/fluxible).  We have a more sophisticated example application, [routing](https://github.com/yahoo/flux-examples/tree/master/routing), showing how everything works together.
 
 Here is a quick example code showcasing how to use `routeName` prop along with `navParams` prop:
 
@@ -99,7 +115,7 @@ var pages = [
 ];
 var Nav = React.createClass({
     render: function () {
-        var context = this.props.context;  // context should provide executeAction() and makePath()
+        var context = this.context || this.props.context;  // context should provide executeAction() and makePath()
         var links = pages.map(function (page) {
             return (
                 <li className="navItem">
