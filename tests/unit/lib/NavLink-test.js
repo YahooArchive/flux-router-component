@@ -72,6 +72,14 @@ describe('NavLink', function () {
             var link = ReactTestUtils.renderIntoDocument(NavLink( {routeName:"foo", navParams:navParams, context:contextMock}, React.DOM.span(null, "bar")));
             expect(link.props.href).to.equal('/foo/a/1/b/2');
         });
+        it ('only routeName defined; use this.context.makePath', function (done) {
+            var navParams = {a: 1, b: 2};
+            React.withContext(contextMock, function () {
+                var link = React.renderToString(NavLink({routeName:"foo", navParams:navParams}));
+                expect(link).to.contain('href="/foo/a/1/b/2"');
+                done();
+            });
+        });
         it ('none defined', function () {
             var navParams = {a: 1, b: 2};
             var link = ReactTestUtils.renderIntoDocument(NavLink( {navParams:navParams, context:contextMock}, React.DOM.span(null, "bar")));
@@ -80,6 +88,19 @@ describe('NavLink', function () {
     });
 
     describe('dispatchNavAction()', function () {
+        it ('use react context', function (done) {
+            var navParams = {a: 1, b: true};
+            var link = ReactTestUtils.renderIntoDocument(NavLink( {href:"/foo", navParams:navParams}, React.DOM.span(null, "bar")));
+            link.context = contextMock;
+            ReactTestUtils.Simulate.click(link.getDOMNode());
+            window.setTimeout(function () {
+                expect(testResult.dispatch.action).to.equal('NAVIGATE');
+                expect(testResult.dispatch.payload.type).to.equal('click');
+                expect(testResult.dispatch.payload.url).to.equal('/foo');
+                expect(testResult.dispatch.payload.params).to.eql({a: 1, b: true});
+                done();
+            }, 10);
+        });
         it ('context.executeAction called for relative urls', function (done) {
             var navParams = {a: 1, b: true};
             var link = ReactTestUtils.renderIntoDocument(NavLink( {href:"/foo", context:contextMock, navParams:navParams}, React.DOM.span(null, "bar")));
