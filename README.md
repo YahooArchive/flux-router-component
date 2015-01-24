@@ -34,7 +34,7 @@ An example of such context is the `ComponentContext` provided by [fluxible-plugi
 Here are two examples of generating `NavLink` using `href` property, and using `routeName` property.  Using `href` property is better than using `routeName`, because:
 
 * Using `href` makes your code more readible, as it shows exactly how the `href` is generated.
-* Using `routeName` assumes `this.context` or `this.prop.context` has a `makePath()` function, which will be used to generate the `href` from the `routeName` and `navParams` props.
+* Using `routeName` assumes `this.context` or `this.props.context` has a `makePath()` function, which will be used to generate the `href` from the `routeName` and `navParams` props.
 * Using `routeName` could be more limited, especially when it comes to query string and hash fragment, if the `makePath()` function does not support query string and hash fragment.
 
 #### Example of Using `href` Property (Recommended)
