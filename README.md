@@ -9,10 +9,11 @@
 Provides navigational React components (`NavLink`) and router mixin (`RouterMixin`) for applications built with [Flux](http://facebook.github.io/react/docs/flux-overview.html) architecture.  Please check out [examples](https://github.com/yahoo/flux-router-component/tree/master/examples) of how to use these components.
 
 ## Context and Expected Context Methods
+
 Before we explain how to use `NavLink` and `RouterMixin`, lets start with two methods they expect:
 
-* executeAction(navigateAction, payload) - This executes navigate action, switches the app to the new route, and update the url.
-* makePath(routeName, routeParams) - This is used to generate url for a given route.
+* `executeAction(navigateAction, payload)` - This executes navigate action, switches the app to the new route, and update the url.
+* `makePath(routeName, routeParams)` - This is used to generate url for a given route.
 
 These two methods need to be available in:
 
