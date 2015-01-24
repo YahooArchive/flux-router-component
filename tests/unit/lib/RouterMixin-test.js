@@ -62,8 +62,8 @@ describe ('RouterMixin', function () {
         routerMixin.state = {
             route: {}
         };
-        global.window = jsdom.jsdom('<html><body></body></html>').defaultView;
-        global.document = global.window.document;
+        global.document = jsdom.jsdom('<html><body></body></html>');
+        global.window = global.document.parentWindow;
         global.navigator = global.window.navigator;
         global.window.scrollTo = scrollToMock;
         testResult = {};
