@@ -10,6 +10,7 @@ var historyMock;
 var scrollToMock;
 var jsdom = require('jsdom');
 var lodash = require('lodash');
+var React = require('react');
 var testResult;
 
 contextMock = {
@@ -73,6 +74,11 @@ describe ('RouterMixin', function () {
         delete global.window;
         delete global.document;
         delete global.navigator;
+    });
+
+    it('contextType defined', function () {
+        expect(routerMixin.contextTypes.executeAction).to.equal(React.PropTypes.func);
+        expect(routerMixin.contextTypes.makePath).to.equal(React.PropTypes.func);
     });
 
     describe('componentDidMount()', function () {
