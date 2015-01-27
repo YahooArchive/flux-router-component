@@ -78,6 +78,7 @@ describe ('RouterMixin', function () {
 
     it('contextType defined', function () {
         expect(routerMixin.contextTypes.executeAction).to.equal(React.PropTypes.func);
+        expect(routerMixin.contextTypes.makePath).to.equal(React.PropTypes.func);
     });
 
     describe('componentDidMount()', function () {
