@@ -303,6 +303,13 @@ var appComponent = Application({
 
 You can also look into this [polyfill.io polyfill service](https://cdn.polyfill.io/v1/).
 
+## Compatible React Versions
+
+| Compatible React Version | flux-router-component Version |
+|--------------------------|-------------------------------|
+| 0.12 | >= 0.4.1 |
+| 0.11 | < 0.4 |
+
 ## License
 This software is free to use under the Yahoo! Inc. BSD license.
 See the [LICENSE file][] for license text and copyright information.
