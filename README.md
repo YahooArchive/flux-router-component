@@ -25,7 +25,7 @@ An example of such context is the `ComponentContext` provided by [fluxible-plugi
 
 **Note** that React context is an undocumented feature, so its API could change without notice.  Here is [a blog from Dave King](https://www.tildedave.com/2014/11/15/introduction-to-contexts-in-react-js.html) that explains what it is and how to use it.
 
-
+[//]: # (API_START)
 ## NavLink
 `NavLink` is the a React component for navigational links.  When the link is clicked, NavLink will dispatch `NAVIGATE` action to flux dispatcher.  The dispatcher can then dispatch the action to the stores that can handle it.
 
@@ -157,6 +157,7 @@ var Application = React.createClass({
     ...
 });
 ```
+[//]: # (API_STOP)
 
 ## History Management (Browser Support and Hash-Based Routing)
 Considering different application needs and [different browser support levels for pushState](http://caniuse.com/#search=pushstate), this library provides the following options for browser history management:
