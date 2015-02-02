@@ -21,7 +21,7 @@ These two methods need to be available in:
 * the `context` prop of the component (`this.props.context`)
 * If exists in both `this.context` and `this.props.context`, the one in `this.context` takes higher precedence.
 
-An example of such context is the `ComponentContext` provided by [fluxible-plugin-routr](https://github.com/yahoo/fluxible-plugin-routr/blob/master/lib/routr-plugin.js#L36), which is a plugin for [fluxible](https://github.com/yahoo/fluxible).  We have a more sophisticated example application, [routing](https://github.com/yahoo/flux-examples/tree/master/routing), showing how everything works together.
+An example of such context is the `ComponentContext` provided by [fluxible-plugin-routr](https://github.com/yahoo/fluxible-plugin-routr/blob/master/lib/routr-plugin.js#L36), which is a plugin for [fluxible](https://github.com/yahoo/fluxible).  We have a more sophisticated example application, [fluxible-router](https://github.com/yahoo/flux-examples/tree/master/fluxible-router), showing how everything works together.
 
 **Note** that React context is an undocumented feature, so its API could change without notice.  Here is [a blog from Dave King](https://www.tildedave.com/2014/11/15/introduction-to-contexts-in-react-js.html) that explains what it is and how to use it.
 
