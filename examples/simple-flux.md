@@ -1,1 +1,1 @@
-[This flux-examples Github repo](https://github.com/yahoo/flux-examples) has a simple [Flux](http://facebook.github.io/react/docs/flux-overview.html) application, [routing](https://github.com/yahoo/flux-examples/tree/master/routing), that works on both client and server.
+[This flux-examples Github repo](https://github.com/yahoo/flux-examples) has a simple [Fluxible](http://www.fluxible.io/) application, [`fluxible-router`](https://github.com/yahoo/flux-examples/tree/master/fluxible-router), that works on both client and server.
