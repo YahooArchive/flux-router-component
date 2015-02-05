@@ -1,6 +1,6 @@
 {
   "name": "flux-router-component",
-  "version": "0.5.8",
+  "version": "0.5.7",
   "description": "Router-related React component and mixin for applications with Flux architecture",
   "main": "index.js",
   "repository": {
