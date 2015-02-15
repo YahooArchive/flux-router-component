@@ -1,7 +1,7 @@
-## NavLink
+# NavLink
 `NavLink` is the a React component for navigational links.  When the link is clicked, NavLink will dispatch `NAVIGATE` action to flux dispatcher.  The dispatcher can then dispatch the action to the stores that can handle it.
 
-### Example Usage
+## Example Usage
 
 Here are two examples of generating `NavLink` using `href` property, and using `routeName` property.  Using `href` property is better than using `routeName`, because:
 
@@ -9,7 +9,7 @@ Here are two examples of generating `NavLink` using `href` property, and using `
 * Using `routeName` assumes `this.context` or `this.props.context` has a `makePath()` function, which will be used to generate the `href` from the `routeName` and `navParams` props.
 * Using `routeName` could be more limited, especially when it comes to query string and hash fragment, if the `makePath()` function does not support query string and hash fragment.
 
-#### Example of Using `href` Property (Recommended)
+### Example of Using `href` Property (Recommended)
 
 If the url is static, or you can generate the url outside of `Navlink`, you can simply pass the url to `NavLink` as a prop.  Here is an example:
 
@@ -54,7 +54,7 @@ var Nav = React.createClass({
 });
 ```
 
-#### Example of Using `routeName` Property
+### Example of Using `routeName` Property
 
 Before you continue with this example, you should know that you can always generate the url yourself outside of `NavLink` and pass it to `NavLink` as `href` prop just like the example above.  Your code will be more straight-forward that way, and you will have more control over how to generate `href` (see more explanations in [the Example Usage section](#example-usage)).
 
