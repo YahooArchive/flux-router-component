@@ -26,22 +26,19 @@
     "setimmediate": "^1.0.2"
   },
   "peerDependencies": {
-    "react": "^0.12.0"
+    "react": ">=0.12.0 <=0.13.0-beta.x"
   },
   "devDependencies": {
     "chai": "^1.9.1",
     "coveralls": "^2.11.1",
-    "grunt": "^0.4.5",
-    "grunt-cli": "^0.1.0",
-    "grunt-react": "^0.10.0",
     "istanbul": "^0.3.2",
     "jsdom": "^3.0.2",
     "jshint": "^2.5.1",
-    "lodash": "^2.4.1",
+    "lodash": "^3.0.0",
     "mocha": "^2.0.1",
     "precommit-hook": "^1.0.2",
-    "react": "^0.12.0",
-    "react-tools": "^0.12.0"
+    "react": ">=0.12.0 <=0.13.0-beta.x",
+    "react-tools": ">=0.12.0 <=0.13.0-beta.x"
   },
   "jshintConfig": {
     "node": true
