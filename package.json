@@ -1,7 +1,7 @@
 {
   "name": "flux-router-component",
   "version": "0.5.9",
-  "description": "Router-related React component and mixin for applications with Flux architecture",
+  "description": "Router-related React component and mixin for applications with Fluxible architecture",
   "main": "index.js",
   "repository": {
     "type": "git",
@@ -12,7 +12,7 @@
     "lint": "jshint lib tests",
     "test": "mocha tests/unit/ --recursive --reporter spec"
   },
-  "author": "Lingyan Zhu <lingyan@yahoo-inc.com",
+  "author": "Lingyan Zhu <lingyan@yahoo-inc.com>",
   "licenses": [
     {
       "type": "BSD",
