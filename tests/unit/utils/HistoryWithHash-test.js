@@ -9,57 +9,11 @@ var HistoryWithHash = require('../../../utils/HistoryWithHash'),
     windowMock,
     testResult;
 
-windowMock = {
-    HTML5: {
-        history: {
-            pushState: function (state, title, url) {
-                testResult.pushState = {
-                    state: state,
-                    title: title,
-                    url: url
-                };
-            },
-            replaceState: function (state, title, url) {
-                testResult.replaceState = {
-                    state: state,
-                    title: title,
-                    url: url
-                };
-            }
-        },
-        addEventListener: function (evt, listener) {
-            testResult.addEventListener = {
-                evt: evt,
-                listener: listener
-            };
-        },
-        removeEventListener: function (evt, listener) {
-            testResult.removeEventListener = {
-                evt: evt,
-                listener: listener
-            };
-        }
-    },
-    OLD: {
-        addEventListener: function (evt, listener) {
-            testResult.addEventListener = {
-                evt: evt,
-                listener: listener
-            };
-        },
-        removeEventListener: function (evt, listener) {
-            testResult.removeEventListener = {
-                evt: evt,
-                listener: listener
-            };
-        }
-    }
-};
-
 describe('HistoryWithHash', function () {
 
     beforeEach(function () {
         testResult = {};
+        windowMock = require('../../mocks/mockWindow')(testResult);
     });
 
     describe('constructor', function () {
@@ -238,6 +192,19 @@ describe('HistoryWithHash', function () {
             expect(testResult.pushState.title).to.equal('t');
             expect(testResult.pushState.url).to.equal('/url?a=b&x=y');
         });
+        it ('useHashRoute=false; has pushState; Firefox', function () {
+            var history = new HistoryWithHash({win: windowMock.Firefox});
+
+            history.pushState({foo: 'bar'});
+            expect(testResult.pushState.state).to.eql({foo: 'bar'});
+            expect(testResult.pushState.title).to.equal(undefined);
+            expect(testResult.pushState.url).to.equal(undefined);
+
+            history.pushState({foo: 'bar'}, 't', '/url');
+            expect(testResult.pushState.state).to.eql({foo: 'bar'});
+            expect(testResult.pushState.title).to.equal('t');
+            expect(testResult.pushState.url).to.equal('/url');
+        });
         it ('useHashRoute=false; no pushState', function () {
             var win = _.extend({}, windowMock.OLD, {location: {}});
             var history = new HistoryWithHash({
@@ -329,6 +296,19 @@ describe('HistoryWithHash', function () {
             expect(testResult.replaceState.state).to.eql({foo: 'bar'});
             expect(testResult.replaceState.title).to.equal('t');
             expect(testResult.replaceState.url).to.equal('/url?a=b&x=y', 'url has query');
+        });
+        it ('useHashRouter=false; has pushState; Firefox', function () {
+            var history = new HistoryWithHash({win: windowMock.Firefox});
+
+            history.replaceState({foo: 'bar'});
+            expect(testResult.replaceState.state).to.eql({foo: 'bar'});
+            expect(testResult.replaceState.title).to.equal(undefined);
+            expect(testResult.replaceState.url).to.equal(undefined);
+
+            history.replaceState({foo: 'bar'}, 't', '/url');
+            expect(testResult.replaceState.state).to.eql({foo: 'bar'});
+            expect(testResult.replaceState.title).to.equal('t');
+            expect(testResult.replaceState.url).to.equal('/url');
         });
         it ('useHashRouter=false; no pushState', function () {
             var win = _.extend({}, windowMock.OLD, {
