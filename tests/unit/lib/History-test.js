@@ -9,57 +9,12 @@ var History = require('../../../lib/History'),
     windowMock,
     testResult;
 
-windowMock = {
-    HTML5: {
-        history: {
-            pushState: function (state, title, url) {
-                testResult.pushState = {
-                    state: state,
-                    title: title,
-                    url: url
-                };
-            },
-            replaceState: function (state, title, url) {
-                testResult.replaceState = {
-                    state: state,
-                    title: title,
-                    url: url
-                };
-            }
-        },
-        addEventListener: function (evt, listener) {
-            testResult.addEventListener = {
-                evt: evt,
-                listener: listener
-            };
-        },
-        removeEventListener: function (evt, listener) {
-            testResult.removeEventListener = {
-                evt: evt,
-                listener: listener
-            };
-        }
-    },
-    OLD: {
-        addEventListener: function (evt, listener) {
-            testResult.addEventListener = {
-                evt: evt,
-                listener: listener
-            };
-        },
-        removeEventListener: function (evt, listener) {
-            testResult.removeEventListener = {
-                evt: evt,
-                listener: listener
-            };
-        }
-    }
-};
 
 describe('History', function () {
 
     beforeEach(function () {
         testResult = {};
+        windowMock = require('../../mocks/mockWindow')(testResult);
     });
 
     describe('constructor', function () {
@@ -214,6 +169,24 @@ describe('History', function () {
             expect(testResult.pushState.title).to.equal('t');
             expect(testResult.pushState.url).to.equal('/url?a=b&x=y');
         });
+        it ('has pushState, Firefox', function () {
+            var history = new History({win: windowMock.Firefox});
+
+            history.pushState({foo: 'bar'});
+            expect(testResult.pushState.state).to.eql({foo: 'bar'});
+            expect(testResult.pushState.title).to.equal(undefined);
+            expect(testResult.pushState.url).to.equal(undefined);
+
+            history.pushState({foo: 'bar'}, 't');
+            expect(testResult.pushState.state).to.eql({foo: 'bar'});
+            expect(testResult.pushState.title).to.equal('t');
+            expect(testResult.pushState.url).to.equal(undefined);
+
+            history.pushState({foo: 'bar'}, 't', '/url');
+            expect(testResult.pushState.state).to.eql({foo: 'bar'});
+            expect(testResult.pushState.title).to.equal('t');
+            expect(testResult.pushState.url).to.equal('/url');
+        });
         it ('no pushState', function () {
             var win = _.extend(windowMock.OLD, {
                 location: {}
@@ -254,6 +227,24 @@ describe('History', function () {
             expect(testResult.replaceState.state).to.eql({foo: 'bar'});
             expect(testResult.replaceState.title).to.equal('t');
             expect(testResult.replaceState.url).to.equal('/url?a=b&x=y', 'url has query');
+        });
+        it ('has pushState, Firefox', function () {
+            var history = new History({win: windowMock.Firefox});
+
+            history.replaceState({foo: 'bar'});
+            expect(testResult.replaceState.state).to.eql({foo: 'bar'});
+            expect(testResult.replaceState.title).to.equal(undefined);
+            expect(testResult.replaceState.url).to.equal(undefined);
+
+            history.replaceState({foo: 'bar'}, 't');
+            expect(testResult.replaceState.state).to.eql({foo: 'bar'});
+            expect(testResult.replaceState.title).to.equal('t');
+            expect(testResult.replaceState.url).to.equal(undefined);
+
+            history.replaceState({foo: 'bar'}, 't', '/url');
+            expect(testResult.replaceState.state).to.eql({foo: 'bar'});
+            expect(testResult.replaceState.title).to.equal('t');
+            expect(testResult.replaceState.url).to.equal('/url');
         });
         it ('no pushState', function () {
             var win = _.extend(windowMock.OLD, {
