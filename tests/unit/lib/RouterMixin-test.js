@@ -19,7 +19,8 @@ contextMock = {
             action: action,
             payload: payload
         };
-    }
+    },
+    makePath: function(){}
 };
 
 historyMock = function (url, state) {
@@ -76,9 +77,23 @@ describe ('RouterMixin', function () {
         delete global.navigator;
     });
 
-    it('contextType defined', function () {
+    it('contextTypes defined', function () {
         expect(routerMixin.contextTypes.executeAction).to.equal(React.PropTypes.func);
         expect(routerMixin.contextTypes.makePath).to.equal(React.PropTypes.func);
+    });
+
+    it('childContextTypes defined', function () {
+        expect(routerMixin.childContextTypes.makePath).to.equal(React.PropTypes.func);
+    });
+
+    describe('getChildContext()', function() {
+        it ('exposes childContextTypes to child context', function() {
+            routerMixin.props = {context: contextMock };
+            var childContext = routerMixin.getChildContext();
+            Object.keys(routerMixin.childContextTypes).forEach(function (key) {
+              expect(childContext[key]).to.be.a('function');
+            }, this);
+        });
     });
 
     describe('componentDidMount()', function () {
