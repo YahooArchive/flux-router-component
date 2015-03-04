@@ -103,7 +103,8 @@ describe('NavLink', function () {
         });
         it ('context.executeAction called for relative urls', function (done) {
             var navParams = {a: 1, b: true};
-            var link = ReactTestUtils.renderIntoDocument(NavLink( {href:"/foo", context:contextMock, navParams:navParams}, React.DOM.span(null, "bar")));
+            var link = ReactTestUtils.renderIntoDocument(NavLink( {href:"/foo", navParams:navParams}, React.DOM.span(null, "bar")));
+            link.context = contextMock;
             ReactTestUtils.Simulate.click(link.getDOMNode(), {button: 0});
             window.setTimeout(function () {
                 expect(testResult.dispatch.action).to.equal('NAVIGATE');
@@ -116,7 +117,8 @@ describe('NavLink', function () {
         it ('context.executeAction called for absolute urls from same origin', function (done) {
             var navParams = {a: 1, b: true};
             var origin = window.location.origin;
-            var link = ReactTestUtils.renderIntoDocument(NavLink( {href: origin + "/foo?x=y", context:contextMock, navParams:navParams}, React.DOM.span(null, "bar")));
+            var link = ReactTestUtils.renderIntoDocument(NavLink( {href: origin + "/foo?x=y", navParams:navParams}, React.DOM.span(null, "bar")));
+            link.context = contextMock;
             ReactTestUtils.Simulate.click(link.getDOMNode(), {button: 0});
             window.setTimeout(function () {
                 expect(testResult.dispatch.action).to.equal('NAVIGATE');
@@ -150,6 +152,29 @@ describe('NavLink', function () {
             ReactTestUtils.Simulate.click(link.getDOMNode(), {button: 0});
             window.setTimeout(function () {
                 expect(testResult.dispatch).to.equal(undefined);
+                done();
+            }, 10);
+        });
+        it ('context.executeAction not called if followLink=true', function (done) {
+            var navParams = {a: 1, b: true};
+            var link = ReactTestUtils.renderIntoDocument(NavLink( {href:"/somepath", navParams:navParams, followLink:true}, React.DOM.span(null, "bar")));
+            link.context = contextMock;
+            ReactTestUtils.Simulate.click(link.getDOMNode(), {button: 0});
+            window.setTimeout(function () {
+                expect(testResult.dispatch).to.equal(undefined);
+                done();
+            }, 1000);
+        });
+        it ('context.executeAction called if followLink=false', function (done) {
+            var navParams = {a: 1, b: true};
+            var link = ReactTestUtils.renderIntoDocument(NavLink( {href:"/foo", navParams:navParams, followLink:false}, React.DOM.span(null, "bar")));
+            link.context = contextMock;
+            ReactTestUtils.Simulate.click(link.getDOMNode(), {button: 0});
+            window.setTimeout(function () {
+                expect(testResult.dispatch.action).to.equal('NAVIGATE');
+                expect(testResult.dispatch.payload.type).to.equal('click');
+                expect(testResult.dispatch.payload.url).to.equal('/foo');
+                expect(testResult.dispatch.payload.params).to.eql({a: 1, b: true});
                 done();
             }, 10);
         });

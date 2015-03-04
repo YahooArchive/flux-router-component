@@ -130,6 +130,7 @@ HistoryWithHash.prototype = {
             if (this._hasPushState) {
                 url = hash ? location.pathname + location.search + hash : null;
                 history.pushState(state, title, url);
+                this.setTitle(title);
             } else if (hash) {
                 location.hash = hash;
             }
@@ -145,6 +146,7 @@ HistoryWithHash.prototype = {
                         history.pushState(state, title, url);
                     }
                 }
+                this.setTitle(title);
             } else if (url) {
                 location.href = url;
             }
@@ -173,6 +175,7 @@ HistoryWithHash.prototype = {
             if (this._hasPushState) {
                 url = hash ? (location.pathname + location.search + hash) : null;
                 history.replaceState(state, title, url);
+                this.setTitle(title);
             } else if (url) {
                 url = location.pathname + location.search + hash;
                 location.replace(url);
@@ -189,9 +192,20 @@ HistoryWithHash.prototype = {
                         history.replaceState(state, title, url);
                     }
                 }
+                this.setTitle(title);
             } else if (url) {
                 location.replace(url);
             }
+        }
+    },
+
+    /**
+     * Sets document title. No-op if title is empty.
+     * @param {String} title  The title string.
+     */
+    setTitle: function (title) {
+        if (title) {
+            this.win.document.title = title;
         }
     }
 };
