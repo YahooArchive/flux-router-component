@@ -186,11 +186,13 @@ describe('HistoryWithHash', function () {
             expect(testResult.pushState.state).to.eql({foo: 'bar'});
             expect(testResult.pushState.title).to.equal('t');
             expect(testResult.pushState.url).to.equal('/url');
+            expect(windowMock.HTML5.document.title).to.equal('t');
 
-            history.pushState({foo: 'bar'}, 't', '/url?a=b&x=y');
+            history.pushState({foo: 'bar'}, 'tt', '/url?a=b&x=y');
             expect(testResult.pushState.state).to.eql({foo: 'bar'});
-            expect(testResult.pushState.title).to.equal('t');
+            expect(testResult.pushState.title).to.equal('tt');
             expect(testResult.pushState.url).to.equal('/url?a=b&x=y');
+            expect(windowMock.HTML5.document.title).to.equal('tt');
         });
         it ('useHashRoute=false; has pushState; Firefox', function () {
             var history = new HistoryWithHash({win: windowMock.Firefox});
@@ -291,11 +293,13 @@ describe('HistoryWithHash', function () {
             expect(testResult.replaceState.state).to.eql({foo: 'bar'});
             expect(testResult.replaceState.title).to.equal('t');
             expect(testResult.replaceState.url).to.equal('/url');
+            expect(windowMock.HTML5.document.title).to.equal('t');
 
-            history.replaceState({foo: 'bar'}, 't', '/url?a=b&x=y');
+            history.replaceState({foo: 'bar'}, 'tt', '/url?a=b&x=y');
             expect(testResult.replaceState.state).to.eql({foo: 'bar'});
-            expect(testResult.replaceState.title).to.equal('t');
+            expect(testResult.replaceState.title).to.equal('tt');
             expect(testResult.replaceState.url).to.equal('/url?a=b&x=y', 'url has query');
+            expect(windowMock.HTML5.document.title).to.equal('tt');
         });
         it ('useHashRouter=false; has pushState; Firefox', function () {
             var history = new HistoryWithHash({win: windowMock.Firefox});

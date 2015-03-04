@@ -52,7 +52,6 @@ historyMock = function (url, state) {
 };
 
 scrollToMock = function (x, y) {
-    console.log('scrollToMock', x, y);
     testResult.scrollTo = {x: x, y: y};
 };
 

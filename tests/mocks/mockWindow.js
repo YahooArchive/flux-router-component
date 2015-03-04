@@ -1,6 +1,7 @@
 module.exports = function mockWindow(testResult) {
     return {
         HTML5: {
+            document: {},
             history: {
                 pushState: function (state, title, url) {
                     testResult.pushState = {
@@ -31,6 +32,7 @@ module.exports = function mockWindow(testResult) {
             }
         },
         Firefox: {
+            document: {},
             history: {
                 pushState: function (state, title, url) {
                     if (arguments.length < 3) {
@@ -72,6 +74,7 @@ module.exports = function mockWindow(testResult) {
             }
         },
         OLD: {
+            document: {},
             addEventListener: function (evt, listener) {
                 testResult.addEventListener = {
                     evt: evt,
