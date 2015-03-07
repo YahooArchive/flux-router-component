@@ -1,1 +1,0 @@
-[This flux-examples Github repo](https://github.com/yahoo/flux-examples) has a simple [Fluxible](http://www.fluxible.io/) application, [`fluxible-router`](https://github.com/yahoo/flux-examples/tree/master/fluxible-router), that works on both client and server.

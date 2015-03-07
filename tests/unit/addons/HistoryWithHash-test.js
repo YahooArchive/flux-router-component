@@ -3,7 +3,7 @@
  * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
  */
 /*globals describe,it,before,beforeEach */
-var HistoryWithHash = require('../../../utils/HistoryWithHash'),
+var HistoryWithHash = require('../../../addons/HistoryWithHash'),
     expect = require('chai').expect,
     _ = require('lodash'),
     windowMock,
@@ -120,7 +120,7 @@ describe('HistoryWithHash', function () {
                 }
             });
             history = new HistoryWithHash({win: win});
-            url = history.getUrl();
+            var url = history.getUrl();
             expect(url).to.equal('/path/to/abc');
 
             win = _.extend({}, windowMock.OLD, {
