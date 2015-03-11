@@ -48,6 +48,7 @@ describe('NavLink', function () {
         React = require('react/addons');
         ReactTestUtils = React.addons.TestUtils;
         NavLink = React.createFactory(require('../../../lib/NavLink'));
+        Wrapper = React.createFactory(require('../../mocks/MockAppComponent'));
         testResult = {};
     });
 
@@ -69,16 +70,16 @@ describe('NavLink', function () {
         });
         it ('only routeName defined', function () {
             var navParams = {a: 1, b: 2};
-            var link = ReactTestUtils.renderIntoDocument(NavLink( {routeName:"foo", navParams:navParams, context:contextMock}, React.DOM.span(null, "bar")));
-            expect(link.props.href).to.equal('/foo/a/1/b/2');
+            var link = React.renderToString(NavLink( {routeName:"foo", navParams:navParams, context:contextMock}, React.DOM.span(null, "bar")));
+            expect(link).to.contain('href="/foo/a/1/b/2"');
         });
         it ('only routeName defined; use this.context.makePath', function (done) {
             var navParams = {a: 1, b: 2};
-            React.withContext(contextMock, function () {
-                var link = React.renderToString(NavLink({routeName:"foo", navParams:navParams}));
-                expect(link).to.contain('href="/foo/a/1/b/2"');
-                done();
-            });
+            var link = React.renderToString(Wrapper({
+                context: contextMock
+            }, NavLink({routeName:"foo", navParams:navParams})));
+            expect(link).to.contain('href="/foo/a/1/b/2"');
+            done();
         });
         it ('none defined', function () {
             var navParams = {a: 1, b: 2};
