@@ -83,8 +83,9 @@ describe('NavLink', function () {
         });
         it ('none defined', function () {
             var navParams = {a: 1, b: 2};
-            var link = ReactTestUtils.renderIntoDocument(NavLink( {navParams:navParams, context:contextMock}, React.DOM.span(null, "bar")));
-            expect(link.props.href).to.equal(undefined);
+            expect(function () {
+                ReactTestUtils.renderIntoDocument(NavLink( {navParams:navParams, context:contextMock}, React.DOM.span(null, "bar")));
+            }).to.throw();
         });
     });
 
@@ -112,6 +113,17 @@ describe('NavLink', function () {
                 expect(testResult.dispatch.payload.type).to.equal('click');
                 expect(testResult.dispatch.payload.url).to.equal('/foo');
                 expect(testResult.dispatch.payload.params).to.eql({a: 1, b: true});
+                done();
+            }, 10);
+        });
+        it ('context.executeAction called for routeNames', function (done) {
+            var link = ReactTestUtils.renderIntoDocument(NavLink( {routeName:"foo", context: contextMock}, React.DOM.span(null, "bar")));
+            link.context = contextMock;
+            ReactTestUtils.Simulate.click(link.getDOMNode(), {button: 0});
+            window.setTimeout(function () {
+                expect(testResult.dispatch.action).to.equal('NAVIGATE');
+                expect(testResult.dispatch.payload.type).to.equal('click');
+                expect(testResult.dispatch.payload.url).to.equal('/foo');
                 done();
             }, 10);
         });
