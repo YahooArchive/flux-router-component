@@ -5,6 +5,10 @@
 /*global window */
 'use strict';
 
+function isUndefined(v) {
+    return v === undefined;
+}
+
 /**
  * @class HistoryWithHash
  * @constructor
@@ -136,16 +140,9 @@ HistoryWithHash.prototype = {
             }
         } else {
             if (this._hasPushState) {
-                try {
-                    // not calling pushState(state, title, url), because
-                    // some browsers update url with '/undefined' if url is undefined
-                    history.pushState.apply(history, arguments);
-                } catch (error) {
-                    // firefox 35 requires 3 args for pushState
-                    if (arguments.length < 3) {
-                        history.pushState(state, title, url);
-                    }
-                }
+                title = isUndefined(title) ? win.document.title : title;
+                url = isUndefined(url) ? win.location.href : url;
+                history.pushState(state, title, url);
                 this.setTitle(title);
             } else if (url) {
                 location.href = url;
@@ -182,16 +179,9 @@ HistoryWithHash.prototype = {
             }
         } else {
             if (this._hasPushState) {
-                try {
-                    // not calling replaceState(state, title, url), because
-                    // some browsers update url with '/undefined' if url is undefined
-                    history.replaceState.apply(history, arguments);
-                } catch (error) {
-                    // firefox 35 requires 3 args for replaceState
-                    if (arguments.length < 3) {
-                        history.replaceState(state, title, url);
-                    }
-                }
+                title = isUndefined(title) ? win.document.title : title;
+                url = isUndefined(url) ? win.location.href : url;
+                history.replaceState(state, title, url);
                 this.setTitle(title);
             } else if (url) {
                 location.replace(url);

@@ -175,12 +175,20 @@ describe('HistoryWithHash', function () {
 
     describe('pushState', function () {
         it ('useHashRoute=false; has pushState', function () {
-            var history = new HistoryWithHash({win: windowMock.HTML5});
+            var win = _.extend(windowMock.HTML5, {
+                'document': {
+                    title: 'current title'
+                },
+                location: {
+                    href: '/currentUrl'
+                }
+            });
+            var history = new HistoryWithHash({win: win});
 
             history.pushState({foo: 'bar'});
             expect(testResult.pushState.state).to.eql({foo: 'bar'});
-            expect(testResult.pushState.title).to.equal(undefined);
-            expect(testResult.pushState.url).to.equal(undefined);
+            expect(testResult.pushState.title).to.equal('current title');
+            expect(testResult.pushState.url).to.equal('/currentUrl');
 
             history.pushState({foo: 'bar'}, 't', '/url');
             expect(testResult.pushState.state).to.eql({foo: 'bar'});
@@ -195,12 +203,20 @@ describe('HistoryWithHash', function () {
             expect(windowMock.HTML5.document.title).to.equal('tt');
         });
         it ('useHashRoute=false; has pushState; Firefox', function () {
-            var history = new HistoryWithHash({win: windowMock.Firefox});
+            var win = _.extend(windowMock.Firefox, {
+                'document': {
+                    title: 'current title'
+                },
+                location: {
+                    href: '/currentUrl'
+                }
+            });
+            var history = new HistoryWithHash({win: win});
 
             history.pushState({foo: 'bar'});
             expect(testResult.pushState.state).to.eql({foo: 'bar'});
-            expect(testResult.pushState.title).to.equal(undefined);
-            expect(testResult.pushState.url).to.equal(undefined);
+            expect(testResult.pushState.title).to.equal('current title');
+            expect(testResult.pushState.url).to.equal('/currentUrl');
 
             history.pushState({foo: 'bar'}, 't', '/url');
             expect(testResult.pushState.state).to.eql({foo: 'bar'});
@@ -282,12 +298,21 @@ describe('HistoryWithHash', function () {
 
     describe('replaceState', function () {
         it ('useHashRouter=false; has pushState', function () {
-            var history = new HistoryWithHash({win: windowMock.HTML5});
+            // var history = new HistoryWithHash({win: windowMock.HTML5});
+            var win = _.extend(windowMock.HTML5, {
+                'document': {
+                    title: 'current title'
+                },
+                location: {
+                    href: '/currentUrl'
+                }
+            });
+            var history = new HistoryWithHash({win: win});
 
             history.replaceState({foo: 'bar'});
             expect(testResult.replaceState.state).to.eql({foo: 'bar'});
-            expect(testResult.replaceState.title).to.equal(undefined);
-            expect(testResult.replaceState.url).to.equal(undefined);
+            expect(testResult.replaceState.title).to.equal('current title');
+            expect(testResult.replaceState.url).to.equal('/currentUrl');
 
             history.replaceState({foo: 'bar'}, 't', '/url');
             expect(testResult.replaceState.state).to.eql({foo: 'bar'});
@@ -302,12 +327,20 @@ describe('HistoryWithHash', function () {
             expect(windowMock.HTML5.document.title).to.equal('tt');
         });
         it ('useHashRouter=false; has pushState; Firefox', function () {
-            var history = new HistoryWithHash({win: windowMock.Firefox});
+            var win = _.extend(windowMock.Firefox, {
+                'document': {
+                    title: 'current title'
+                },
+                location: {
+                    href: '/currentUrl'
+                }
+            });
+            var history = new HistoryWithHash({win: win});
 
             history.replaceState({foo: 'bar'});
             expect(testResult.replaceState.state).to.eql({foo: 'bar'});
-            expect(testResult.replaceState.title).to.equal(undefined);
-            expect(testResult.replaceState.url).to.equal(undefined);
+            expect(testResult.replaceState.title).to.equal('current title');
+            expect(testResult.replaceState.url).to.equal('/currentUrl');
 
             history.replaceState({foo: 'bar'}, 't', '/url');
             expect(testResult.replaceState.state).to.eql({foo: 'bar'});
