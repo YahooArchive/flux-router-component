@@ -5,7 +5,7 @@
 * execute navigate action and then dispatch `CHANGE_ROUTE_START` and `CHANGE_ROUTE_SUCCESS` or `CHANGE_ROUTE_FAILURE` events via flux dispatcher on window `popstate` events
 * [manage scroll position](#scroll-position-management) when navigating between pages
 
-Note that the RouterMixing reads your component's `state.route`; your component is responsible for setting this value.  Typically this would be done by setting up a store which listens for 'CHANGE_ROUTE_SUCCESS' events.
+Note that the `RouterMixin` reads your component's `state.route`; your component is responsible for setting this value.  Typically this would be done by setting up a store which listens for 'CHANGE_ROUTE_SUCCESS' events.
 
 ## Example Usage
 ```js
