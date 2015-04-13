@@ -92,13 +92,18 @@ describe('NavLink', function () {
     describe('dispatchNavAction()', function () {
         it ('use react context', function (done) {
             var navParams = {a: 1, b: true};
-            var link = ReactTestUtils.renderIntoDocument(NavLink( {href:"/foo", navParams:navParams}, React.DOM.span(null, "bar")));
+            var link = ReactTestUtils.renderIntoDocument(NavLink({
+                href:"/foo",
+                preserveScrollPosition: true,
+                navParams: navParams
+            }, React.DOM.span(null, "bar")));
             link.context = contextMock;
             ReactTestUtils.Simulate.click(link.getDOMNode(), {button: 0});
             window.setTimeout(function () {
                 expect(testResult.dispatch.action).to.equal('NAVIGATE');
                 expect(testResult.dispatch.payload.type).to.equal('click');
                 expect(testResult.dispatch.payload.url).to.equal('/foo');
+                expect(testResult.dispatch.payload.preserveScrollPosition).to.equal(true);
                 expect(testResult.dispatch.payload.params).to.eql({a: 1, b: true});
                 done();
             }, 10);
