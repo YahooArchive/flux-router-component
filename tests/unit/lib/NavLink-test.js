@@ -210,6 +210,22 @@ describe('NavLink', function () {
                 }, 10);
         });
 
+        it('navigates on regular click using replaceState', function (done) {
+                var origin = window.location.origin;
+                var link = ReactTestUtils.renderIntoDocument(
+                    NavLink(
+                        {href: origin, replaceState: true, context:contextMock},
+                        React.DOM.span(null, "bar")
+                    )
+                );
+                ReactTestUtils.Simulate.click(link.getDOMNode(), {button: 0});
+                window.setTimeout(function () {
+                    expect(testResult.dispatch.action).to.equal('NAVIGATE');
+                    expect(testResult.dispatch.payload.type).to.equal('replacestate');
+                    done();
+                }, 10);
+        });
+
         ['metaKey', 'altKey', 'ctrlKey', 'shiftKey'].map(function (key) {
             it('does not navigate on modified ' + key, function (done) {
                     var eventData = {button: 0};
