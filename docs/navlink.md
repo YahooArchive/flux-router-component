@@ -8,6 +8,8 @@ in navigation events.
 | routeName | String | Not used if `href` is specified. This is the name of the target route, which should be defined in your app's routes. |
 | navParams | Object | If `href` prop is not available, `navParams` object will be used together with `routeName` to generate the href for the link.  This object needs to contain route params the route path needs.  Eg. for a route path `/article/:id`, `navParams.id` will be the article ID. |
 | followLink | boolean, default to false | If set to true, client side navigation will be disabled.  NavLink will just act like a regular anchor link. |
+| replaceState | boolean, default to false | If set to true, replaceState is being used instead of pushState |
+| preserveScrollPosition | boolean, default to false | If set to true, the page will maintain its scroll position on route change. |
 
 
 ## Example Usage
