@@ -11,7 +11,7 @@
 or if you're using ES6:
 
 ```js
-import {handleHistory, handleRoute, navigateAction, NavLink, RouteStore} from 'fluxible';
+import {handleHistory, handleRoute, navigateAction, NavLink, RouteStore} from 'fluxible-router';
 ```
 
 ## Addons

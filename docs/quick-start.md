@@ -6,13 +6,16 @@ The library has a built-in [`RouteStore`](../api/RouteStore.md) that needs to be
 
 ```js
 // app.js
+
 var Fluxible = require('fluxible');
 var RouteStore = require('fluxible-router').RouteStore;
+var routes = require('./configs/routes');
+
 var app = new Fluxible({
     component: require('./components/App.jsx')
 });
 
-var MyRouteStore = RouteStore.withStaticRoutes(require('./configs/routes');
+var MyRouteStore = RouteStore.withStaticRoutes(routes);
 
 app.registerStore(MyRouteStore);
 
@@ -55,7 +58,7 @@ On the server (or client in client-only apps) where you handle the initial reque
 var app = require('./app');
 var navigateAction = require('fluxible-router').navigateAction;
 
-...
+// ...
     var context = app.createContext();
     context.executeAction(navigateAction, {
         url: url // e.g. req.url
@@ -64,7 +67,7 @@ var navigateAction = require('fluxible-router').navigateAction;
         res.write(html);
         res.end();
     });
-...
+// ...
 ```
 
 ## Use it in your components
@@ -74,10 +77,12 @@ var navigateAction = require('fluxible-router').navigateAction;
 var provideContext = require('fluxible').provideContext;
 var handleHistory = require('fluxible-router').handleHistory;
 var NavLink = require('fluxible-router').NavLink;
-module.exports = provideContext(handleHistory(React.createClass({
+
+var AppComponent = React.createClass({
     render: function () {
         // Get the handler from the current route which is passed in as prop
         var Handler = this.props.currentRoute.handler;
+
         return (
             <div>
                 <ul>
@@ -94,5 +99,13 @@ module.exports = provideContext(handleHistory(React.createClass({
             </div>
         );
     }
-})));
+});
+
+// wrap with history handler
+AppComponent = handleHistory(AppComponent);
+
+// and wrap that with context
+AppComponent = provideContext(AppComponent);
+
+module.exports = AppComponent;
 ```

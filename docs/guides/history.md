@@ -16,7 +16,7 @@ This is the default `History` implementation `RouterMixin` uses.  It is a straig
 
 ## Provide Your Own History Manager
 
-If none of the history managers provided in this library works for your application, you can also customize the RouterMixin to use your own history manager implementation.  Please follow the same API as `History`.
+If none of the history managers provided in this library works for your application, you can also customize the `handleHistory` higher order component to use your own history manager implementation.  Please follow the same API as `History`.
 
 ### API
 
