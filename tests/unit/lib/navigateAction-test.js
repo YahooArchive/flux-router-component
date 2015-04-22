@@ -145,7 +145,7 @@ describe('navigateAction', function () {
             url: '/404'
         }, function (err) {
             expect(err).to.be.an('object');
-            expect(err.status).to.equal(404);
+            expect(err.statusCode).to.equal(404);
             done();
         });
     });
@@ -156,7 +156,7 @@ describe('navigateAction', function () {
             method: 'get'
         }, function (err) {
             expect(err).to.be.an('object');
-            expect(err.status).to.equal(404);
+            expect(err.statusCode).to.equal(404);
             done();
         });
     });
