@@ -1,5 +1,7 @@
 # flux-router-component
 
+***Notice: This package will be deprecated in favor of [`fluxible-router`](https://github.com/yahoo/fluxible-router).***
+
 [![npm version](https://badge.fury.io/js/flux-router-component.svg)](http://badge.fury.io/js/flux-router-component)
 [![Build Status](https://travis-ci.org/yahoo/flux-router-component.svg?branch=master)](https://travis-ci.org/yahoo/flux-router-component)
 [![Dependency Status](https://david-dm.org/yahoo/flux-router-component.svg)](https://david-dm.org/yahoo/flux-router-component)
