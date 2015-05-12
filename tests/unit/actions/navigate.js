@@ -2,7 +2,7 @@
  * Copyright 2014, Yahoo! Inc.
  * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
  */
-/*globals window describe,it,before,beforeEach */
+/*globals describe,it,before,beforeEach */
 var expect = require('chai').expect,
     navigateAction = require('../../../actions/navigate'),
     lodash = require('lodash'),
@@ -85,14 +85,6 @@ describe('navigateAction', function () {
                 mockContext.dispatchCalls.push(arguments);
             }
         };
-
-        global.document = jsdom.jsdom('<html><body></body></html>');
-        global.window = global.document.parentWindow;
-    });
-
-    afterEach(function () {
-        delete global.window;
-        delete global.document;
     });
 
     it ('should not call anything if the router is not set', function () {
@@ -226,15 +218,26 @@ describe('navigateAction', function () {
         });
     });
 
-    it ('should not call an action if there is a window.onbeforeload method', function () {
-        window.onbeforeload = function () {
-            return 'test';
-        };
+    describe('window.onbeforeunload', function () {
+        beforeEach(function () {
+            global.document = jsdom.jsdom('<html><body></body></html>');
+            global.window = global.document.parentWindow;
+            global.window.onbeforeunload = function () {
+                return 'this is a test';
+            };
+        });
 
-        navigateAction(mockContext, {
-            url: '/'
-        }, function () {
-            expect(mockContext.executeActionCalls.length).to.equal(0);
+        afterEach(function () {
+            delete global.window;
+            delete global.document;
+        });
+
+        it ('should not call an action if there is a window.onbeforeunload method', function () {
+            navigateAction(mockContext, {
+                url: '/action'
+            }, function () {
+                expect(mockContext.executeActionCalls.length).to.equal(0);
+            });
         });
     });
 });
