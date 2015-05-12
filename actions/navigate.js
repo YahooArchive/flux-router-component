@@ -1,3 +1,5 @@
+/*global window */
+
 var debug = require('debug')('navigateAction');
 var queryString = require('query-string');
 var searchPattern = /\?([^\#]*)/;
@@ -40,6 +42,15 @@ module.exports = function (context, payload, done) {
     debug('dispatching CHANGE_ROUTE', route);
     context.dispatch('CHANGE_ROUTE_START', route);
     var action = route.config && route.config.action;
+    var onBeforeUnloadText = typeof window !== 'undefined' && typeof window.onbeforeunload === 'function' ? window.onbeforeunload() : '';
+    var confirmResult = onBeforeUnloadText ? window.confirm(onBeforeUnloadText) : true;
+
+    if (!confirmResult) {
+        debug('route is no longer being navigated to because of a window.onbeforeunload() check, dispatching without calling action');
+        context.dispatch('CHANGE_ROUTE_SUCCESS', route);
+        done();
+        return;        
+    }
 
     if ('string' === typeof action && context.getAction) {
         action = context.getAction(action);
