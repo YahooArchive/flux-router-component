@@ -222,6 +222,7 @@ describe('navigateAction', function () {
         beforeEach(function () {
             global.document = jsdom.jsdom('<html><body></body></html>');
             global.window = global.document.parentWindow;
+            global.window.confirm = function () { return false; };
             global.window.onbeforeunload = function () {
                 return 'this is a test';
             };

@@ -42,14 +42,21 @@ module.exports = function (context, payload, done) {
     debug('dispatching CHANGE_ROUTE', route);
     context.dispatch('CHANGE_ROUTE_START', route);
     var action = route.config && route.config.action;
-    var onBeforeUnloadText = typeof window !== 'undefined' && typeof window.onbeforeunload === 'function' ? window.onbeforeunload() : '';
-    var confirmResult = onBeforeUnloadText ? window.confirm(onBeforeUnloadText) : true;
+    var onBeforeUnloadText;
+    var confirmResult;
 
-    if (!confirmResult) {
-        debug('route is no longer being navigated to because of a window.onbeforeunload() check, dispatching without calling action');
-        context.dispatch('CHANGE_ROUTE_SUCCESS', route);
-        done();
-        return;        
+    if (typeof window !== 'undefined') {
+        onBeforeUnloadText = typeof window.onbeforeunload === 'function' ? window.onbeforeunload() : '';
+        confirmResult = onBeforeUnloadText && typeof window.confirm === 'function' ? window.confirm(onBeforeUnloadText) : true;
+
+        if (!confirmResult) {
+            debug('route is no longer being navigated to because of a window.onbeforeunload() check, dispatching without calling action');
+            context.dispatch('CHANGE_ROUTE_SUCCESS', route);
+            done();
+            return;
+        } else {
+            window.onbeforeunload = null;
+        }
     }
 
     if ('string' === typeof action && context.getAction) {
