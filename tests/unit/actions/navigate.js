@@ -2,11 +2,12 @@
  * Copyright 2014, Yahoo! Inc.
  * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
  */
-/*globals describe,it,before,beforeEach */
+/*globals window describe,it,before,beforeEach */
 var expect = require('chai').expect,
     navigateAction = require('../../../actions/navigate'),
     lodash = require('lodash'),
-    urlParser = require('url');
+    urlParser = require('url'),
+    jsdom = require('jsdom');
 
 describe('navigateAction', function () {
     var mockContext,
@@ -84,6 +85,14 @@ describe('navigateAction', function () {
                 mockContext.dispatchCalls.push(arguments);
             }
         };
+
+        global.document = jsdom.jsdom('<html><body></body></html>');
+        global.window = global.document.parentWindow;
+    });
+
+    afterEach(function () {
+        delete global.window;
+        delete global.document;
     });
 
     it ('should not call anything if the router is not set', function () {
@@ -214,6 +223,18 @@ describe('navigateAction', function () {
             expect(mockContext.dispatchCalls[0][1].query).to.eql({});
             expect(mockContext.dispatchCalls[1][0]).to.equal('CHANGE_ROUTE_SUCCESS');
             expect(mockContext.dispatchCalls[1][1].url).to.equal('/post');
+        });
+    });
+
+    it ('should not call an action if there is a window.onbeforeload method', function () {
+        window.onbeforeload = function () {
+            return 'test';
+        };
+
+        navigateAction(mockContext, {
+            url: '/'
+        }, function () {
+            expect(mockContext.executeActionCalls.length).to.equal(0);
         });
     });
 });
