@@ -177,6 +177,16 @@ The `History` API does not allow `popstate` events to be cancelled, which result
 
 Our solution is to check for a `window.onbeforeunload()` method, prompt the user with `window.confirm()`, and then navigate to the correct route based on the confirmation.  If a route is cancelled by the user, we reset back to the original URL by using  the `History` `pushState()` method.
 
+To implement the `window.onbeforeunload()` method, you need to set it within the components that need user verification before leaving a page.  Here is an example:
+
+```javascript
+componentDidMount: function() {
+  window.onbeforeunload = function () {
+    return 'Make sure to save your changes before leaving this page!';
+  }
+}
+```
+
 
 ## Polyfills
 `addEventListener` and `removeEventListener` polyfills are provided by:
