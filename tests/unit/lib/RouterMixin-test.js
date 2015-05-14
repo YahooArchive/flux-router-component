@@ -163,6 +163,31 @@ describe ('RouterMixin', function () {
                 done();
             }, 10);
         });
+
+        describe('window.onbeforeunload', function () {
+            beforeEach(function () {
+                global.window.confirm = function () { return false; };
+                global.window.onbeforeunload = function () {
+                    return 'this is a test';
+                };
+            });
+
+            it ('should change the url back to the oldRoute if there is a window.onbeforeunload method', function (done) {
+                routerMixin.props = {context: contextMock, historyCreator: function() { return historyMock(); }};
+                var origPushState = window.history.pushState;
+                routerMixin.state = {
+                    route: {
+                        url: '/the_path_from_history'
+                    }
+                };
+                routerMixin.componentDidMount();
+                window.setTimeout(function() {
+                    expect(testResult.dispatch).to.equal(undefined, JSON.stringify(testResult.dispatch));
+                    done();
+                }, 10);
+            });
+        });
+
     });
 
     describe('componentWillUnmount()', function () {

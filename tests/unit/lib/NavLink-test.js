@@ -191,6 +191,26 @@ describe('NavLink', function () {
                 done();
             }, 10);
         });
+
+        describe('window.onbeforeunload', function () {
+            beforeEach(function () {
+                global.window.confirm = function () { return false; };
+                global.window.onbeforeunload = function () {
+                    return 'this is a test';
+                };
+            });
+
+            it ('should not call context.executeAction when a user does not confirm the onbeforeunload method', function (done) {
+                var navParams = {a: 1, b: true};
+                var link = ReactTestUtils.renderIntoDocument(NavLink( {href:"/foo", navParams:navParams}, React.DOM.span(null, "bar")));
+                link.context = contextMock;
+                ReactTestUtils.Simulate.click(link.getDOMNode(), {button: 0});
+                window.setTimeout(function () {
+                    expect(testResult).to.deep.equal({});
+                    done();
+                }, 10);
+            });
+        });
     });
 
     describe('click type', function () {
