@@ -6,8 +6,7 @@
 var expect = require('chai').expect,
     navigateAction = require('../../../actions/navigate'),
     lodash = require('lodash'),
-    urlParser = require('url'),
-    jsdom = require('jsdom');
+    urlParser = require('url');
 
 describe('navigateAction', function () {
     var mockContext,
@@ -215,30 +214,6 @@ describe('navigateAction', function () {
             expect(mockContext.dispatchCalls[0][1].query).to.eql({});
             expect(mockContext.dispatchCalls[1][0]).to.equal('CHANGE_ROUTE_SUCCESS');
             expect(mockContext.dispatchCalls[1][1].url).to.equal('/post');
-        });
-    });
-
-    describe('window.onbeforeunload', function () {
-        beforeEach(function () {
-            global.document = jsdom.jsdom('<html><body></body></html>');
-            global.window = global.document.parentWindow;
-            global.window.confirm = function () { return false; };
-            global.window.onbeforeunload = function () {
-                return 'this is a test';
-            };
-        });
-
-        afterEach(function () {
-            delete global.window;
-            delete global.document;
-        });
-
-        it ('should not call an action if there is a window.onbeforeunload method', function () {
-            navigateAction(mockContext, {
-                url: '/action'
-            }, function () {
-                expect(mockContext.executeActionCalls.length).to.equal(0);
-            });
         });
     });
 });
